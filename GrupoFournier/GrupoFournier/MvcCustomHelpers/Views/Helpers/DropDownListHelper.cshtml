@@ -1,0 +1,118 @@
+﻿@* Generator: MvcHelper *@
+@* Generator: Template  GeneratePrettyNames : true *@
+@* GeneratePrettyNames : true *@
+
+@using MvcCustomHelpers.Classes
+@using System.Web.Mvc.Html
+
+
+@*DropDownList para Entidad "Categoria de Parametros"*@
+@helper  DropDownRol(System.Web.Mvc.HtmlHelper html, bool todos)
+{
+// -- Creamos el adapter
+Logic.RolLogic rolLogic = new Logic.RolLogic();
+
+// -- Obtengo la lista
+var conceptos = rolLogic.GetAllActivos();
+
+// -- Llamo al Generador de combos
+    @DropDownBuilder(html, ControlsNames.DropDownRol, conceptos, todos, ValuesNames.Nombre, ValuesNames.ID);
+}
+
+@*DropDownList para Entidad "Roles"*@
+@helper  DropDownRolInferioresEmpresa(System.Web.Mvc.HtmlHelper html, bool todos)
+{
+    // -- Creamos el adapter
+    Logic.RolLogic rolLogic = new Logic.RolLogic();
+
+    // -- Obtengo la lista
+    var conceptos = rolLogic.GetInferioresEmpresa();
+
+    // -- Llamo al Generador de combos
+    @DropDownBuilder(html, ControlsNames.DropDownRol, conceptos, todos, ValuesNames.Nombre, ValuesNames.ID);
+}
+
+@*DropDownList para Entidad "Roles"*@
+@helper  DropDownRolParaCursos(System.Web.Mvc.HtmlHelper html, bool todos)
+{
+    // -- Creamos el adapter
+    Logic.RolLogic rolLogic = new Logic.RolLogic();
+
+    // -- Obtengo la lista
+    var conceptos = rolLogic.GetRolesParaCursos();
+
+    // -- Llamo al Generador de combos
+    @DropDownBuilder(html, ControlsNames.DropDownRol, conceptos, todos, ValuesNames.Nombre, ValuesNames.ID);
+}
+
+@*DropDownList para Entidad "Categoria de Parametros"*@
+@helper  DropDownEmpresa(System.Web.Mvc.HtmlHelper html, bool todos)
+{
+// -- Creamos la logic
+Logic.EmpresaLogic empresaLogic = new Logic.EmpresaLogic();
+
+// -- Obtengo la lista
+var conceptos = empresaLogic.GetAllActivos();
+
+// -- Llamo al Generador de combos
+    @DropDownBuilder(html, ControlsNames.DropDownEmpresa, conceptos, todos, ValuesNames.Nombre, ValuesNames.ID);
+}
+
+
+@*DropDownList para Entidad "Cursos" para empresa*@
+@helper  DropDownCursosDeEmpresa(System.Web.Mvc.HtmlHelper html, bool todos)
+{
+    // -- Creamos la logic
+    Logic.CursoLogic cursoLogic = new Logic.CursoLogic();
+
+    // -- Obtengo la lista
+    var conceptos = cursoLogic.GetByEmpresa();
+
+    // -- Llamo al Generador de combos
+    @DropDownBuilder(html, ControlsNames.DropDownCurso, conceptos, todos, ValuesNames.Nombre, ValuesNames.ID);
+}
+
+@*DropDownList para Entidad "Plantilla" *@
+@helper  DropDownPlantilla(System.Web.Mvc.HtmlHelper html, bool todos)
+{
+    // -- Creamos la logic
+    Logic.PlantillaLogic logic = new Logic.PlantillaLogic();
+
+    // -- Obtengo la lista
+    var conceptos = logic.GetAllActivos();
+
+    // -- Llamo al Generador de combos
+    @DropDownBuilder(html, ControlsNames.DropDownPlantilla, conceptos, todos, ValuesNames.Nombre, ValuesNames.ID);
+}
+
+@*Construye un DropDownList *@
+@helper DropDownBuilder(System.Web.Mvc.HtmlHelper html, string ID, System.Collections.IList lista, bool todos, string displayMember, string valueMember)
+{
+// -- Seteamos el valor seleccionado por defecto
+long? selectedValue = null;
+
+// -- Si en el ViewBag hay un selected
+if (html.ViewData[string.Format("selected{0}", ID)] != null)
+{
+
+    // -- Seteo el selected
+    selectedValue = Convert.ToInt64(html.ViewData[string.Format("selected{0}", ID)]);
+}
+
+// -- Convierto la lista a dropDownList
+var dropDownListItems = DropDownListConvertor.ListToDropDownListItemList(lista, displayMember, valueMember);
+
+// -- Creo la lista de select items
+var listsItems = new System.Web.Mvc.SelectList(dropDownListItems, "Valor", "Texto", selectedValue);
+
+if (todos)
+{
+    // -- Muestro el combo
+    @html.DropDownList(ID, listsItems, "-- TODOS --", htmlAttributes: new { @class = "form-control select2" })
+}
+else
+{
+    // -- Muestro el combo
+    @html.DropDownList(ID, listsItems, htmlAttributes: new { @class = "form-control select2" })
+}
+}

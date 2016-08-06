@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+@model PresentacionGrupoFournier.Models.UsuarioViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Grupo Fortius</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/TemaAdminLTE/AdminLTE.min.css" rel="stylesheet" />
+    <link href="~/Content/PresentationStyles.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <style>
+        .alert-danger {
+            background-image: none;
+        }
+
+        .login-box {
+            margin-top:0;
+            margin-bottom: 0;
+        }
+        html{            
+            padding-top: 25px;
+            padding-bottom: 25px;
+            background-color: #ADACAC;
+        }
+        form{            
+            background-color: #ADACAC;
+        }
+        .login-logo
+        {
+            margin-top:0;
+        }
+    </style>
+</head>
+<body class="hold-transition login-page">
+    @using (Html.BeginForm("Login", "Ingreso", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id = "frmLogin", @class = "form-horizontal", role = "form" }))
+    {
+        <div class="login-box">
+            <div class="login-logo">
+
+                <img src="~/Imagenes/header-logo-fortius.png" />
+            </div>
+            <div class="login-box-body box box-default">
+                <div class="form-group has-feedback">
+                    <div class="center"><i class="fa fa-user fa-3x "></i></div>
+                    <div class="col-md-12">
+                        @Html.LabelFor(model => model.NombreUsuario, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @*@Html.TextBoxFor(m => m.NombreUsuario, new { @id = "NameLogin", name = "NameLogin", @class = "form-control", placeholder = "Ingrese su nombre de usuario" })*@
+                        @Html.EditorFor(model => model.NombreUsuario, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingrese su nombre de usuario" } })
+                        <span class="fa fa-user fa-fw icon-padding"></span>
+                        @Html.ValidationMessageFor(model => model.NombreUsuario, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-12">
+                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Ingrese su contraseña" })
+                        <span class="fa fa-key fa-fw icon-padding"></span>
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                @*@{ Html.RenderPartial("_AlertsHandlerError"); }*@
+                <div class="form-group has-feedback">
+                    <div class="col-md-12">
+                        <button id="btnIniciarSesion" type="submit" class="btn btn-primary btn-block"> Iniciar Sesión </button>
+                    </div>
+                </div>
+                @*<a href="/Ingreso/OlvideMiPassword">Olvide mi contraseña</a><br>*@
+                </div>
+            </div>
+        }
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")
+        <script src="~/Scripts/bootstrap.min.js"></script>
+
+        <script>
+
+        </script>
+    </body>
+    </html>

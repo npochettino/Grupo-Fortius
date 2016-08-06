@@ -1,0 +1,61 @@
+﻿@model Entities.Empresa
+@using MvcCustomHelpers.Razor
+@{
+    ViewBag.Title = "Asignar cursos a " + Model.Nombre;
+}
+<style>
+    .formularioSimple {
+        width: 800px;
+    }
+</style>
+<div class="box box-info box-form">
+    <div class="tituloVista row">
+        <div class="col-md-12">
+            <i class="fa fa-suitcase fa-fw"></i>
+            @ViewBag.Title
+        </div>
+    </div>
+    <div class="formularioSimple">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.EntityID);
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.Label("Cursos", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.DropDownList("CursosID", (MultiSelectList)ViewBag.CursosID, new { @class = "control-label col-md-12 select2", multiple = "multiple" })
+                        @Html.ValidationMessage("CursosID", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        @FormButtonsHelpers.FormButtonBackToList("Empresa")
+                        @FormButtonsHelpers.FormButtonPostSave()
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        var cursosSelectedItems;
+        $(document).ready(function () {
+            //Setea los items que deberian estar seleccionados pero no fueron seleccionados por problemas del mvc
+            cursosSelectedItems= @Html.Raw(Json.Encode(@ViewBag.CursosID.SelectedValues));
+            $('#CursosID option').each(function() {
+                if($.inArray(Number($(this).val()), cursosSelectedItems) > -1)
+                {
+                    if($(this).attr( "selected" )==undefined)
+                    {
+                        $(this).attr( "selected" , "selected");
+                    }
+                }
+            })
+            $('#CursosID').select2();
+        });
+    </script>
+}

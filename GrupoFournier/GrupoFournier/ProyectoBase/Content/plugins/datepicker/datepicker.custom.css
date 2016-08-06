@@ -1,0 +1,70 @@
+﻿/*#region Date*/
+.sandbox-container-datepicker {
+    border-width: 0;
+    padding: 0;
+}
+
+    .sandbox-container-datepicker input {
+        width: 100%;
+    }
+
+/*#region Zona Filtros*/
+/* Estilos para los pickers dentro de zona de filtros */
+
+.box-filter .sandbox-container-datepicker {
+    height: 26px;
+}
+
+    .box-filter .sandbox-container-datepicker .input-group-addon {
+        padding: 3px 5px;
+    }
+/*#endregion Zona Filtros*/
+
+/*#region Zona Formularios*/
+/* Estilos para los pickers dentro de zona de filtros */
+.formularioSimple .sandbox-container-datepicker input {
+    height: 32px;
+    padding-left: 12px;
+}
+
+.formularioSimple .sandbox-container-datepicker .input-group-addon {
+    padding: 3px 8px;
+}
+/*#endregion Zona Formularios*/
+
+/*#endregion Date*/
+
+/*#region Datetime*/
+.sandbox-container-datetimepicker {
+    border-width: 0;
+    padding: 0;
+}
+
+    .sandbox-container-datetimepicker input {
+        width: 100%;
+    }
+
+/*#region Zona Filtros*/
+/* Estilos para los pickers dentro de zona de filtros */
+
+.box-filter .sandbox-container-datetimepicker {
+    height: 26px;
+}
+
+    .box-filter .sandbox-container-datetimepicker .input-group-addon {
+        padding: 3px 5px;
+    }
+/*#endregion Zona Filtros*/
+
+/*#region Zona Formularios*/
+/* Estilos para los pickers dentro de zona de filtros */
+.formularioSimple .sandbox-container-datetimepicker input {
+    height: 32px;
+}
+
+.formularioSimple .sandbox-container-datetimepicker .input-group-addon {
+    padding: 3px 8px;
+}
+/*#endregion Zona Formularios*/
+
+/*#endregion Datetime*/

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Entities.Diapositiva>
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Diapositivas del curso \"" + ViewBag.cursoName + "\"";
+}
+@using MvcCustomHelpers.Razor
+@Styles.Render("~/bundles/Content/GridMVC")
+@Styles.Render("~/bundles/Content/dataTables")
+
+@helper ColumnaEditar(long diapositivaID)
+{
+    <a href="/Diapositiva/Save?diapositivaID=@(diapositivaID)&cursoID=@ViewBag.cursoID"><span class="btn btn-xs btn-info"><i class="fa fa-pencil-square-o fa-fw"></i>Editar</span></a>
+}
+
+<div class="box box-body">
+    <div class="tituloVista row">
+        <div class="col-md-12"><i class="fa fa-file-image-o fa-fw"></i>@ViewBag.Title</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                <a href="/Diapositiva/Save?cursoID=@ViewBag.cursoID"><span class="btn btn-success"><i class="fa fa-plus-circle fa-fw"></i>Nuevo</span></a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Grid(Model.OrderBy(x=>x.Orden)).Columns(columns =>
+       {
+           columns.Add(c => c.Titulo).Titled("Nombre");
+           columns.Add(c => c.Orden).Titled("Orden");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => ColumnaEditar(r.EntityID)).SetWidth(30).Css("gridButtonColumn");
+       }).Sortable(false).WithMultipleFilters()
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <br />
+            <a href="/Curso/Index"><span class="btn btn-danger"><i class="fa fa-arrow-circle-left fa-fw"></i>Volver a cursos</span></a>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/Scripts/GridMVC")
+    @Scripts.Render("~/bundles/Scripts/dataTables")
+    <script>
+    </script>
+}

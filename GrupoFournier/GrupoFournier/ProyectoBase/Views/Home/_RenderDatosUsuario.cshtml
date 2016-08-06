@@ -1,0 +1,56 @@
+﻿@model Entities.Usuario
+
+<div style="margin-top:10px">
+    <img src="~/Imagenes/profile.png" width="40" height="40" />
+    <a href="@Url.Action("SaveUsuarioEmpresa/" + Model.EntityID, "Usuario")" style="margin:10px">
+        <span style="color:white">
+            @Html.DisplayFor(model => model.NombreUsuario)
+        </span>
+    </a>
+    <a href="/Ingreso/Logout" style="margin:10px">
+        <img src="~/Imagenes/logout.png" width="30" height="30" />
+    </a>
+</div>
+@*
+
+    <span style="color:white">
+            Cerrar sesión
+        </span>
+    @Html.ActionLink(Model.NombreUsuario, "SaveUsuarioEmpresa/" + Model.EntityID, "Usuario")
+
+        <a href="@Html.Action("SaveUsuarioEmpresa/" + Model.EntityID, "Usuario")" class="dropdown-toggle" data-toggle="dropdown">
+
+
+        </a>*@
+@*
+    <li class="dropdown user user-menu">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-user fa-fw"></i>
+            <span class="hidden-xs">@Html.DisplayFor(model => model.NombreUsuario) </span>
+        </a>
+        <ul class="dropdown-menu">
+            <!-- User image -->
+            <li class="user-header">
+                <i class="fa fa-user fa-fw iconoUsuarioGrande"></i>
+                <p>
+                    @Html.DisplayFor(model => model.NombreCompleto) - @Html.DisplayFor(model => model.Rol.Nombre)
+                </p>
+                <p>
+
+                </p>
+            </li>
+
+            <li class="user-footer">
+
+                <div class="pull-left">
+                    <a href="/Usuario/ChangePassword?isEmpresa=false)" class="btn btn-default btn-flat">Cambiar Contraseña</a>
+                </div>
+
+                <div class="pull-right">
+                    <a href="/Ingreso/Logout" class="btn btn-default btn-flat">Salir</a>
+                </div>
+
+            </li>
+        </ul>
+    </li>*@
+

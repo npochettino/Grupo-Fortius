@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Grupo Fortius</title>
+    @Styles.Render("~/bundles/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/bundles/Content/Select2")
+    @Styles.Render("~/bundles/Content/TemaAdminLTE")
+    @Styles.Render("~/bundles/Content/PNotifyStyle")
+
+    @*<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
+</head>
+<body class="hold-transition skin-black layout-boxed fixed">
+
+    <div class="">
+        <div class="wrapper">
+            <header class="main-header" style="background-color:#696767">
+                <!-- Logo -->
+                @Html.Action("RenderLogoEmpresa", "Home")                
+                <!-- Header Navbar: style can be found in header.less -->
+                <nav class="navbar navbar-static-top" role="navigation">
+                    <!-- Sidebar toggle button-->
+                    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <span class="sr-only">Toggle navigation</span>
+                    </a>
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <!-- User Account: style can be found in dropdown.less -->
+                            @Html.Action("RenderDatosUsuario", "Home")
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="main-sidebar">
+                <!-- sidebar: style can be found in sidebar.less -->
+                <section class="sidebar">
+                    <!-- sidebar menu: : style can be found in sidebar.less -->
+                    @Html.Action("RenderMenuRecursivo", "Home")
+                </section>
+                <!-- /.sidebar -->
+            </aside>
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+                @RenderBody()
+            </div><!-- /.content-wrapper -->
+            <footer class="main-footer">
+                <div class="pull-right hidden-xs">
+                    @*<b>Version</b> 2.3.0*@
+                    @*@typeof(WebApiApplication).Assembly.GetName().Version*@
+                </div>
+                @*@Html.Action("RenderFooter", "Home")*@
+                @*<strong>Copyright &copy; 2015 <a href="http://www.keepitsimple.com.ar/">Keep IT Simple</a>.</strong> All rights reserved.*@
+            </footer>
+        </div><!-- ./wrapper -->
+
+    </div>
+    @*@Html.Action("RenderUserRolesDDL", "Usuario")*@
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/Scripts/TemaAdminLTE")
+    @Scripts.Render("~/bundles/PNotify")
+    @Scripts.Render("~/bundles/Scripts/JQuery-easy-overlay")
+    @Scripts.Render("~/bundles/Scripts/Select2")
+    <script>
+        // --
+        $.widget.bridge('uibutton', $.ui.button);
+        // -- PNotify -> Style Swicher
+        PNotify.prototype.options.styling = "bootstrap3";
+
+
+        //-- Alertas cuando se guardo correctamente
+        if ('@TempData.ContainsKey("SaveSuccess")' == 'True') {
+            new PNotify({
+                title: 'Se guardo correctamente',
+                text: '@TempData["SaveSuccess"]',
+                type: 'success',
+                hide: true,
+                delay: 8000
+            });
+        }
+        else if ('@TempData.ContainsKey("Notice")' == 'True') {
+            new PNotify({
+                title: 'Atencion !',
+                text: '@TempData["Notice"]',
+                type: 'notice',
+                hide: true,
+                delay: 8000
+            });
+        }
+        $(document).ready(function () {
+            $('#buttonCambiarRol').click(function () {
+                BloquearContenido();
+                var rolID = $('#ComboRoles').val();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: '@Url.Action("CambiarRol", "Usuario")',
+                    data: { "rolID": rolID },
+                    success: function (data) {
+                        DesbloquearContenido();
+                        window.location.href = '@Url.Action("Index", "Home")';
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        DesbloquearContenido();
+                        bootbox.alert("Error al cambiar de rol");
+                    }
+                });
+            });
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+    <!-- Alert handler -->
+    <div class="container body-content">
+        @*@{ Html.RenderPartial("_AlertsHandler"); }*@
+    </div>
+</body>
+</html>

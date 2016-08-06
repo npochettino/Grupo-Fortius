@@ -1,0 +1,68 @@
+﻿@* Generator: MvcHelper *@
+@* Generator: Template  GeneratePrettyNames : true *@
+@* GeneratePrettyNames : true *@
+
+@*Botones para formularios*@
+@*Boton agregar*@
+@helper FormButtonAdd(string action, string controller)
+{
+    <a href="/@controller/@action"><span class="btn btn-success"><i class="fa fa-plus-circle fa-fw"></i>Nuevo</span></a>
+}
+@*Boton volver a lista*@
+@helper FormButtonBackToList(string action, string controller)
+{
+    <a href="/@controller/@action"><span class="btn btn-danger"><i class="fa fa-arrow-circle-left fa-fw"></i>Volver a la lista</span></a>
+}
+@*Boton volver a lista*@
+@helper FormButtonBackToList(string controller)
+{
+    <a href="/@controller"><span class="btn btn-danger"><i class="fa fa-arrow-circle-left fa-fw"></i>Volver a la lista</span></a>
+}
+@*Boton grabar*@
+@helper FormButtonPostSave()
+{
+    <button type="submit" class="btn btn-success">
+        <i class="fa fa-floppy-o fa-fw"></i>Guardar
+    </button>
+}
+@*Boton borrar*@
+@helper FormButtonPostDelete()
+{
+    <button type="submit" class="btn btn-success">
+        <i class="fa fa-trash fa-fw"></i>Borrar
+    </button>
+}
+
+@*Boton submit*@
+@helper FormButtonSubmit(string text, string iconClass)
+{
+    <button type="submit" class="btn btn-primary">
+        <i class="@iconClass"></i>@text
+    </button>
+}
+
+@*Boton cancelar*@
+@helper FormButtonCalcelar(string action, string controller)
+{
+    <a href="/@controller/@action"><span class="btn btn-danger"><i class="fa fa-arrow-circle-left fa-fw"></i>Cancelar</span></a>
+}
+
+@*Boton genérico*@
+@helper ButtonGeneric(string action, string controller, string text, string iconClass, string buttonClass)
+{
+    <a href="/@controller/@action/"><span class="@buttonClass"><i class="@iconClass"></i>@text</span></a>
+}
+
+@*Boton genérico con ID*@
+@helper ButtonGenericForAjax(string text, string iconClass, string buttonClass, string ID)
+{
+    <a id=@ID name=@ID><span class="@buttonClass"><i class="@iconClass"></i>@text</span></a>
+}
+
+@*Boton submit generico*@
+@helper FormButtonSubmitCustom(string text, string iconClass, string buttonClass)
+{
+    <button type="submit" class="@buttonClass">
+        <i class="@iconClass"></i>@text
+    </button>
+}

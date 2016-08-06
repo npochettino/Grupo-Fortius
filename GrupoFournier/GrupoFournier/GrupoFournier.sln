@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PresentacionGrupoFournier", "ProyectoBase\PresentacionGrupoFournier.csproj", "{AD3C3EF1-2FBD-42CF-9BDE-044EED7C020F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{AEE1D97F-42E4-4AEF-9C0A-432DFA2E9CDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DALC", "DALC\DALC.csproj", "{9EADA387-6703-4DC4-AC0C-C4DFF2DED78F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj", "{CDAD9207-C90D-41A6-8346-6F8F1C24EEEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cross", "Cross\Cross.csproj", "{C0F210DA-B4FB-4518-89AA-9955D8130A2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fwk", "Fwk\Fwk.csproj", "{3B9ACEF1-680E-4523-9E0F-02D8BBF2005F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcCustomHelpers", "MvcCustomHelpers\MvcCustomHelpers.csproj", "{5EF4CFE1-5EEE-4368-91B8-105473B853F2}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://mfm-sistemas.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Cross\\Cross.csproj
+		SccProjectName1 = Cross
+		SccLocalPath1 = Cross
+		SccProjectUniqueName2 = DALC\\DALC.csproj
+		SccProjectName2 = DALC
+		SccLocalPath2 = DALC
+		SccProjectUniqueName3 = Entities\\Entities.csproj
+		SccProjectName3 = Entities
+		SccLocalPath3 = Entities
+		SccProjectUniqueName4 = Fwk\\Fwk.csproj
+		SccProjectName4 = Fwk
+		SccLocalPath4 = Fwk
+		SccProjectUniqueName5 = Logic\\Logic.csproj
+		SccProjectName5 = Logic
+		SccLocalPath5 = Logic
+		SccProjectUniqueName6 = MvcCustomHelpers\\MvcCustomHelpers.csproj
+		SccProjectName6 = MvcCustomHelpers
+		SccLocalPath6 = MvcCustomHelpers
+		SccProjectUniqueName7 = ProyectoBase\\PresentacionGrupoFournier.csproj
+		SccProjectName7 = ProyectoBase
+		SccLocalPath7 = ProyectoBase
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD3C3EF1-2FBD-42CF-9BDE-044EED7C020F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD3C3EF1-2FBD-42CF-9BDE-044EED7C020F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD3C3EF1-2FBD-42CF-9BDE-044EED7C020F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD3C3EF1-2FBD-42CF-9BDE-044EED7C020F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEE1D97F-42E4-4AEF-9C0A-432DFA2E9CDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEE1D97F-42E4-4AEF-9C0A-432DFA2E9CDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEE1D97F-42E4-4AEF-9C0A-432DFA2E9CDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEE1D97F-42E4-4AEF-9C0A-432DFA2E9CDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EADA387-6703-4DC4-AC0C-C4DFF2DED78F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EADA387-6703-4DC4-AC0C-C4DFF2DED78F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EADA387-6703-4DC4-AC0C-C4DFF2DED78F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EADA387-6703-4DC4-AC0C-C4DFF2DED78F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDAD9207-C90D-41A6-8346-6F8F1C24EEEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDAD9207-C90D-41A6-8346-6F8F1C24EEEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDAD9207-C90D-41A6-8346-6F8F1C24EEEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDAD9207-C90D-41A6-8346-6F8F1C24EEEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0F210DA-B4FB-4518-89AA-9955D8130A2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0F210DA-B4FB-4518-89AA-9955D8130A2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0F210DA-B4FB-4518-89AA-9955D8130A2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0F210DA-B4FB-4518-89AA-9955D8130A2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B9ACEF1-680E-4523-9E0F-02D8BBF2005F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B9ACEF1-680E-4523-9E0F-02D8BBF2005F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B9ACEF1-680E-4523-9E0F-02D8BBF2005F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B9ACEF1-680E-4523-9E0F-02D8BBF2005F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EF4CFE1-5EEE-4368-91B8-105473B853F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EF4CFE1-5EEE-4368-91B8-105473B853F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EF4CFE1-5EEE-4368-91B8-105473B853F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EF4CFE1-5EEE-4368-91B8-105473B853F2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,781 @@
+﻿@model IEnumerable<Entities.Diapositiva>
+@using GridMvc.Html
+@using MvcCustomHelpers.Razor
+
+@{
+    ViewBag.Title = Model.ToList().First().Curso.Nombre;
+}
+<style>
+    .contenidoTexto {
+        /*margin-bottom: 30px;*/
+        margin-top: 20px;
+        /*float:left;*/
+    }
+
+    .box-success {
+        padding-left: 40px;
+        padding-right: 20px;
+    }
+
+    .box-danger {
+        padding-left: 40px;
+        padding-right: 20px;
+    }
+
+    .prev-next {
+        padding-top: 30px;
+        padding-bottom: 0px;
+        /*float:left;*/
+    }
+
+    .links-diapositiva {
+        margin-left: -40px;
+        margin-right: -20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .link-lateral {
+        cursor: pointer;
+        color: black;
+    }
+
+    #anteriorSiguienteContainer {
+        padding-bottom: 10px;
+    }
+
+    #anteriorSiguienteContainer {
+        padding-top: 8px;
+    }
+
+    .contenedorBotones {
+        float: left;
+        width: 20%;
+    }
+
+    .contenedorTextos {
+        float: left;
+        width: 75%;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        line-height: 1.2;
+    }
+
+    #tituloCurso h2 {
+        margin-bottom: 2px;
+        margin-top: 2px;
+    }
+
+    .content-wrapper {
+        padding-top: 2px;
+    }
+
+    progress {
+        width: 90%;
+        margin: auto;
+        height: 22px;
+        border: solid gray;
+        border-radius: 2px;
+        background-color: whiteSmoke;
+        color: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+    }
+
+        progress::-webkit-progress-value {
+            background: #D4D4D4;
+        }
+</style>
+
+@*@{  Entities.Diapositiva diapositiva = Model.Where(x => x.Orden == ViewBag.DiapositivaOrden).FirstOrDefault();
+
+        //Defino ordenAnterior y ordenSiguiente. Si no existen quedan con valor 0 para que sean deshabilitados
+        Int64 ordenAnterior, ordenSiguiente;
+        ordenAnterior = ViewBag.DiapositivaOrden - 1;
+        if (ViewBag.DiapositivaOrden == Model.Count())
+        {
+            ordenSiguiente = 0;
+        }
+        else
+        {
+            ordenSiguiente = ViewBag.DiapositivaOrden + 1;
+        }
+    }*@
+
+@{
+    var diapositiva = Model.First();
+}
+
+@Styles.Render("~/bundles/Content/GridMVC")
+@Styles.Render("~/bundles/Content/dataTables")
+<div class="row text-center" id="tituloCurso">
+    <h2>@ViewBag.Title</h2>
+</div>
+<div class="row" id="cursoContenido">
+    <div class="col-sm-3 col-xs-12" style="height: 100%; padding-left:2px; padding-right: 2px;">
+        <div class="box box-danger" style="height: 100%">
+            @foreach (var diapo in Model)
+            {
+                <a class="row link-lateral" onclick="GetDiapositiva(@diapo.EntityID)">@diapo.Titulo</a>
+            }
+        </div>
+    </div>
+    <div class="col-sm-9 col-xs-12" style="height: 100%; padding-left:2px; padding-right: 2px;">
+        <div class="box box-success">
+            <div class="tituloVista row">
+                <div class="col-sm-12">
+                    <h2 id="tituloContainer"></h2>
+                </div>
+            </div>
+            <div class="contenidoTexto row">
+                <div class="col-sm-12">
+                    <p id="contenidoContainer"></p>
+                </div>
+            </div>
+            <div class="links-diapositiva row">
+                <div class="col-sm-12 form-inline" id="referidasContainer">
+                    @*@for (var i = 0; i < diapositiva.DiapositivasReferidas.Count; i++)
+                        {
+                            <a style="padding-right: 20px;" onclick="GetDiapositiva(@diapositiva.DiapositivasReferidas[i].EntityID)">
+                                <span class="btn btn-primary"><i class="fa fa-external-link fa-fw"></i> @diapositiva.DiapositivasReferidas[i].Titulo</span>
+                            </a>
+                        }*@
+                </div>
+            </div>
+            <div class="prev-next row text-center" style="bottom: 0; /*position: absolute;*/ width: 100%;">
+                <div class="col-sm-12 form-inline" id="anteriorSiguienteContainer">
+                    <div class="col-sm-4 text-left" id="anteriorContainer"></div>
+                    <div class="col-sm-4" id="botonesLecturaContainer">
+                        <a onclick="Play()" class="btn btn-info btn-sm"><i class="fa fa-play fa-fw"></i></a>
+                        <a onclick="PausarLectura()" class="btn btn-warning btn-sm"><i class="fa fa-pause fa-fw"></i></a>
+                        <a onclick="StopLectura()" class="btn btn-danger btn-sm"><i class="fa fa-stop fa-fw"></i></a>
+                    </div>
+                    <div class="col-sm-4 text-right" id="siguienteContainer" style="">
+                        @*@if (Model.Count() > 1)
+                            {
+                                <a onclick="GetDiapositiva(@Model.ToList()[1].EntityID)"><span class="btn btn-success btn-lg">Siguiente <i class="fa fa-arrow-circle-right fa-fw"></i></span></a>
+                            }*@
+                    </div>
+                </div>
+            </div>
+            <progress id="seekbar" value="0" max="1"></progress>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    @Scripts.Render("~/bundles/Scripts/GridMVC")
+    @Scripts.Render("~/bundles/Scripts/dataTables")
+    <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+    <script>
+        // -- Id del tipo de plantilla de la ultima diapositiva cargada
+        var plantillaID;
+        // -- Indica si la diapositiva es de audio (true) o es de voz (false)
+        var isDiapositivaAudio = true;
+        // -- Botones de la diapositiva
+        var botonesDiapositiva;
+        // -- Array Textos centrados
+        var textosCentrados;
+        // -- Array de texto en distintas posiciones
+        var textoDiferentesPosiciones;
+        // -- Array Textos Apilados Horizontalmente
+        var textosApiladosHorizontal
+        // -- Id del ultimo texto apilado leido
+        var ultimoTextoApiladoLeido;
+        // -- Id del ultimo texto diferente posicion leido
+        var ultimoTextoDiferentePosicion;
+        // -- Si hay algo pausado
+        var pausado = false;
+        // -- Si hay algo pausado
+        var reproduciendo = false;
+        // -- Variable de Audio
+        var audio;
+        // -- Es la posicion del texto que se va a reproducir
+        var posicion;
+        // -- Ultima diapositiva ID
+        var ultimaDiapositivaID;
+        // -- Si es el primer texto del contenido
+        var isPrimerTexto;
+        // -- indica si se presiono stop
+        var stop = false;
+        // -- Altura del video que se va a insertar
+        var heightVideo;
+        // -- Tiempo total de la diapositiva
+        var tiempoTotalDiapositiva;
+
+        var maxWidthVideo;
+
+        $(document).ready(function () {
+            // -- Freno todo en document ready por si recarga pagina
+            window.speechSynthesis.cancel();
+            pausado = false;
+
+            $('footer').hide();
+            // -- Oculto el menu para tener mas espacio
+            $('.sidebar-toggle').click();
+            // -- Se calcula el alto
+            // -- Los numeros fijos que se restan son por paddings y margenes
+            var height = $(window).height() - $('.main-header').height() - $('#tituloCurso').height() - 10;
+            $('#cursoContenido').height(height);
+            heightVideo = height - $('.prev-next').height() - $('.links-diapositiva').height() - $('.tituloVista').height() - 170;
+            $('.contenidoTexto').height(heightVideo);
+
+            // -- Calculo el ancho
+            maxWidthVideo = $(window).width() * 0.6;
+            // -- Inicio la primer diapositiva
+            GetDiapositiva(@diapositiva.EntityID);
+        });
+
+        function GetDiapositiva(diapositivaID) {
+            // -- Cancelo la lectura del texto
+            // -- Si esta reproduciendo
+            if (audio != undefined)
+            {
+                audio.pause();
+            }
+
+            //if (responsiveVoice.isPlaying()) {
+            //    // -- Cancelo
+            //    responsiveVoice.cancel();
+            //}
+
+            // -- Bloqueo contenido
+            BloquearContenido();
+            // -- Llamo al ajax
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: '@Url.Action("GetDiapositiva", "Diapositiva")',
+                data: { "diapositivaID": diapositivaID },
+                success: function (data) {
+                    // -- Asigno id de la diapositiva
+                    ultimaDiapositivaID = data.Diapositiva.EntityID;
+                    // -- Asigno el tipo de plantilla
+                    plantillaID = data.Diapositiva.Plantilla.EntityID;
+                    // -- Pongo que es la primer parte
+                    isPrimerTexto = true;
+                    // -- Pongo si es diapositiva audio o no
+                    isDiapositivaAudio = data.Diapositiva.IsDiapositivaAudio;
+                    // -- Pongo el tiempo total de la diapositiva
+                    tiempoTotalDiapositiva = data.Diapositiva.TiempoTotal;
+                    // -- Si es Plantilla video oculto los botones de lectura
+                    if (plantillaID == 5) {
+                        $('#botonesLecturaContainer').css('visibility', 'hidden')
+                    }
+                    else {
+                        $('#botonesLecturaContainer').css('visibility', '')
+                    }
+                    // -- Actualizo titulo
+                    $('#tituloContainer').html(data.Diapositiva.Titulo);
+                    $('#tituloContainer').css("color", data.Diapositiva.ColorTitulo);
+
+                    // -- Actualizo Contenido
+                    $('#contenidoContainer').html(data.Diapositiva.Plantilla.Estructura.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+                    // -- Si es del tipo botones
+                    if (plantillaID == 1) {
+                        // -- Asigno los botones
+                        botonesDiapositiva = data.Diapositiva.Botones;
+                        // -- Creo los botones
+                        for (var j = 0; j < data.Diapositiva.Botones.length; j++) {
+                            // -- Creo el elemento
+                            var botonText = '<div class="btn" style="background-color: ' + data.Diapositiva.Botones[j].Color + '" data-id="' + data.Diapositiva.Botones[j].EntityID + '"">' + data.Diapositiva.Botones[j].Nombre + '</div>';
+                            // -- Lo transformo a elemento Jquery
+                            var botonJquery = $(botonText);
+                            // -- Asigno click
+                            botonJquery.click(function () {
+                                // -- Freno lectura
+                                // -- Si esta reproduciendo
+                                if (!isDiapositivaAudio && responsiveVoice.isPlaying()) {
+                                    // -- Cancelo
+                                    responsiveVoice.cancel();
+                                }
+                                // -- Busco el boton correspondiente
+                                for (var h = 0; h < botonesDiapositiva.length; h++) {
+                                    if (botonesDiapositiva[h].EntityID == $(this).attr('data-id')) {
+                                        // -- Asigna texto
+                                        $('.contenedorTextos').hide().html(botonesDiapositiva[h].Contenido.replace(/(?:\r\n|\r|\n)/g, '<br />')).fadeIn(1000);
+                                        posicion = h + 1;
+                                        break;
+                                    }
+                                }
+                                // -- Luego de asignar el texto correspondiente al botón inicio la lectura
+                                if (isDiapositivaAudio) {
+                                    PlayAudio();
+                                }
+                                else {
+                                    PlayLectura();
+                                }
+                            });
+                            // -- Agrego el boton
+                            $('.contenedorBotones').append(botonJquery);
+                            $('.contenedorBotones').append('<br/><br/>');
+                        }
+                    }
+                    else if (plantillaID == 2) {
+                        // -- Asigno textos
+                        textosCentrados = data.Diapositiva.Textos;
+                        // -- Si tiene textos
+                        if (data.Diapositiva.Textos.length > 0) {
+                            // -- Asigno el contenido de el primer texto
+                            $('.contenidoTextosCentrados').hide().html(data.Diapositiva.Textos[0].Contenido.replace(/(?:\r\n|\r|\n)/g, '<br />')).fadeIn(1000);
+                            // -- Asigno el id del texto actual
+                            $('.contenidoTextosCentrados').attr('data-current-id', data.Diapositiva.Textos[0].EntityID);
+                            // -- Inicio lectura
+                            if (isDiapositivaAudio) {
+                                // -- inicializo la variable posicion en 1 para que empiece del primer audio
+                                posicion = 1;
+
+                                PlayAudio();
+                            }
+                            else {
+                                PlayLectura();
+                            }
+                        }
+                    }
+                    else if (plantillaID == 3) {
+                        // -- Asigno textos
+                        textoDiferentesPosiciones = data.Diapositiva.Textos;
+                        // -- Recorro textos
+                        for (var j = 0; j < data.Diapositiva.Textos.length; j++) {
+                            switch (data.Diapositiva.Textos[j].Orden) {
+                                case 1:
+                                    // -- Asigno contenido
+                                    $('#contenedorSuperiorIzquierdo').attr('data-id', data.Diapositiva.Textos[j].EntityID).html(data.Diapositiva.Textos[j].Contenido.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+                                    break;
+                                case 2:
+                                    // -- Asigno contenido
+                                    $('#contenedorSuperiorDerecho').attr('data-id', data.Diapositiva.Textos[j].EntityID).html(data.Diapositiva.Textos[j].Contenido.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+                                    break;
+                                case 3:
+                                    // -- Asigno contenido
+                                    $('#contenedorCentral').attr('data-id', data.Diapositiva.Textos[j].EntityID).html(data.Diapositiva.Textos[j].Contenido.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+                                    break;
+                                case 4:
+                                    // -- Asigno contenido
+                                    $('#contenedorInferiorIzquierdo').attr('data-id', data.Diapositiva.Textos[j].EntityID).html(data.Diapositiva.Textos[j].Contenido.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+                                    break;
+                                case 5:
+                                    // -- Asigno contenido
+                                    $('#contenedorInferiorDerecho').attr('data-id', data.Diapositiva.Textos[j].EntityID).html(data.Diapositiva.Textos[j].Contenido.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+                                    break;
+                            }
+                        }
+                        // -- Inicio lectura
+                        if (isDiapositivaAudio) {
+                            // -- inicializo la variable posicion en 1 para que empiece del primer audio
+                            posicion = 1;
+                            PlayAudio();
+                        }
+                        else {
+                            PlayLectura();
+                        }
+                    }
+                    else if (data.Diapositiva.Plantilla.EntityID == 4) {
+                        // -- Asigno textos
+                        textosApiladosHorizontal = data.Diapositiva.Textos;
+                        // -- Recorro textos
+                        for (var j = 0; j < data.Diapositiva.Textos.length; j++) {
+                            var textoHorizontal
+
+                            // -- Creo el elemento
+                            textoHorizontal = '<div class="row" data-id="' + data.Diapositiva.Textos[j].EntityID + '" style="display:none">' + data.Diapositiva.Textos[j].Contenido.replace(/(?:\r\n|\r|\n)/g, '<br />') + '</div>';
+
+                            // -- Lo transformo a elemento Jquery
+                            var textoJquery = $(textoHorizontal);
+                            // -- Agrego el boton
+                            $('.contenedorTextosHorizontales').append(textoJquery);
+                            $('.contenedorTextosHorizontales').append('<br/>');
+                        }
+                        // -- Inicio lectura
+                        if (isDiapositivaAudio) {
+                            // -- inicializo la variable posicion en 1 para que empiece del primer audio
+                            posicion = 1;
+                            PlayAudio();
+                        }
+                        else {
+                            PlayLectura();
+                        }
+                    }
+                    else if (data.Diapositiva.Plantilla.EntityID == 5) {
+                        //<div class="contenedorVideo"></div>
+                        var video = '<video controls autoplay><source src="/Imagenes/VideosCursos/' + data.Diapositiva.Video + '"></video>'; //type="video/mp4" style="max-width:720px;max-height:480px;"
+                        var videoJquery = $(video);
+                        videoJquery.height(heightVideo);
+                        videoJquery.css("max-width", maxWidthVideo);
+                        $('.contenedorVideo').append(videoJquery);
+                        $('.contenedorVideo').append('<br/>');
+                    }
+
+                    // -- Saco estilo al box
+                    $('.box-success').removeAttr('style');
+                    // -- Agrego estilo con imagen
+                    $('.box-success').attr('style', 'background-image: url("' + data.Diapositiva.Imagen + '"); background-size:100%; height: 100%');
+                    // -- Armo referidas
+                    ArmarReferidas(data.Diapositiva);
+                    // -- Si hay anterior armo anterior
+                    if (data.DiapositivaAnterior != null) {
+                        $('#anteriorContainer').html('<a onclick="GetDiapositiva(' + data.DiapositivaAnterior.EntityID + ')"><span class="btn btn-success btn-lg">Anterior <i class="fa fa-arrow-circle-left fa-fw"></i></span></a>');
+                    }
+                    else {
+                        $('#anteriorContainer').html('');
+                    }
+                    // -- Si hay siguiente armo siguiente
+                    if (data.DiapositivaSiguiente != null) {
+                        $('#siguienteContainer').html('<a onclick="GetDiapositiva(' + data.DiapositivaSiguiente.EntityID + ')"><span class="btn btn-success btn-lg">Siguiente <i class="fa fa-arrow-circle-right fa-fw"></i></span></a>');
+                    }
+                    else {
+                        $('#siguienteContainer').html('');
+                    }
+                    DesbloquearContenido();
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    DesbloquearContenido();
+                    bootbox.alert('Error al recibir informacón de diapositiva.');
+                }
+            });
+
+            if (!isDiapositivaAudio) {
+                $('#seekbar').css('display', 'none');
+            }
+            else {
+                $('#seekbar').css('display', 'block');
+            }
+        }
+
+        // Arma botones para diapositivas referidas
+        function ArmarReferidas(diapositiva) {
+
+            var botonesHtml = '';
+            for (var i = 0; i < diapositiva.DiapositivasReferidas.length; i++) {
+                var botonesHtml = botonesHtml + '<a style="padding-right: 20px;"  onclick="GetDiapositiva(' + diapositiva.DiapositivasReferidas[i].EntityID + ')">'
+                    + '<span class="btn btn-primary"><i class="fa fa-external-link fa-fw"></i>' + diapositiva.DiapositivasReferidas[i].Titulo + '</span></a>';
+            }
+            $('#referidasContainer').html(botonesHtml);
+        }
+
+        //Funcion del boton play
+        function Play() {
+            // -- Inicio lectura
+            if (isDiapositivaAudio) {
+                PlayAudio();
+            }
+            else {
+                PlayLectura();
+            }
+        }
+
+        // Lee el texto
+        function PlayLectura() {
+            //si se presiono el stop arranco de nuevo la diapositiva
+            if (stop) {
+                GetDiapositiva(ultimaDiapositivaID);
+                stop = false;
+            }
+                // -- Si esta pausado
+            else if (pausado) {
+                // -- Continuo
+                responsiveVoice.resume();
+            }
+            else {
+                // -- Si es del tipo botones
+                if (plantillaID == 1) {
+                    // -- Seteo el texto
+                    var text = $('.contenedorTextos').text();
+                    // -- Hago que lo diga
+                    responsiveVoice.speak(text, "Spanish Latin American Female", { rate: 1.5 });
+                }
+                // -- Si es del tipo textos centrados
+                if (plantillaID == 2) {
+                    // -- Seteo el texto
+                    var text = $('.contenidoTextosCentrados').text();
+                    // -- Si es la primer parte
+                    if (isPrimerTexto) {
+                        // -- Lo pongo en false
+                        isPrimerTexto = false;
+                        // -- Le agrego el titulo
+                        text = $('#tituloContainer').text() + '.' + text;
+                    }
+                    // -- Hago que lo diga
+                    responsiveVoice.speak(text, "Spanish Latin American Female", { rate: 1.5, onend: leerTextoCentrado });
+                }
+                if (plantillaID == 3) {
+                    var text = $('.textosDiferentePosicion[style="display: none"][data-id]').first().text();
+                    // -- Si es la primer parte
+                    if (isPrimerTexto) {
+                        // -- Lo pongo en false
+                        isPrimerTexto = false;
+                        // -- Le agrego el titulo
+                        text = $('#tituloContainer').text() + '.' + text;
+                    }
+                    // -- Asigno id del que estoy por leer
+                    ultimoTextoDiferentePosicion = $('.textosDiferentePosicion[style="display: none"][data-id]').first().attr('data-id');
+                    // -- Lo hago visible
+                    $('.textosDiferentePosicion[style="display: none"][data-id]').first().show().fadeIn(1000);
+                    responsiveVoice.speak(text, "Spanish Latin American Female", { rate: 1.5, onend: leerTextoDiferentePosicion });
+                }
+                // -- Si es del tipo textos apilados horizontales
+                if (plantillaID == 4) {
+                    var text = $('.contenedorTextosHorizontales [style="display:none"]').first().text();
+                    // -- Si es la primer parte
+                    if (isPrimerTexto) {
+                        // -- Lo pongo en false
+                        isPrimerTexto = false;
+                        // -- Le agrego el titulo
+                        text = $('#tituloContainer').text() + '.' + text;
+                    }
+                    // -- Asigno id del que estoy por leer
+                    ultimoTextoApiladoLeido = $('.contenedorTextosHorizontales [style="display:none"]').first().attr('data-id');
+                    // -- Lo hago visible
+                    $('.contenedorTextosHorizontales [style="display:none"]').first().show().fadeIn(1000);
+                    responsiveVoice.speak(text, "Spanish Latin American Female", { rate: 1.5, onend: leerTextoHorizontal });
+                }
+            }
+
+            // -- Pongo como no pausado
+            pausado = false;
+        }
+
+        function ReproducirAudio(tiempoArranque) {
+            $(audio).bind('timeupdate', function () {
+                var tiempoTotal = 0;
+
+                if (plantillaID == 1) {
+                    tiempoTotal = this.duration;
+                }
+                else {
+                    tiempoTotal = tiempoTotalDiapositiva;
+                }
+
+                $('#seekbar').attr("value", (this.currentTime + tiempoArranque) / tiempoTotal);
+            });
+
+            audio.play();
+            reproduciendo = true;
+        }
+
+        // Reproduce Audio
+        function PlayAudio() {
+            // -- Si esta reproduciendo pauso
+            if (reproduciendo) {
+                audio.pause();
+            }
+            //si se presiono el stop arranco de nuevo la diapositiva
+            if (stop) {
+                GetDiapositiva(ultimaDiapositivaID);
+                stop = false;
+            }
+                // -- Si esta pausado
+            else if (pausado) {
+                // -- Continuo
+                audio.play();
+                reproduciendo = true;
+                pausado = false;
+            }
+            else {
+                // -- Si es del tipo botones
+                if (plantillaID == 1) {
+                    audio = new Audio("../../Imagenes/AudiosCursos/diapositiva" + ultimaDiapositivaID + "-" + posicion + ".mp3");
+                    ReproducirAudio(0);
+                }
+                // -- Si es del tipo textos centrados
+                if (plantillaID == 2) {
+                    // -- Si es la primer parte
+                    if (isPrimerTexto) {
+                        // -- Lo pongo en false
+                        isPrimerTexto = false;
+                    }
+                    // -- Reproduzco el audio
+                    audio = new Audio("../../Imagenes/AudiosCursos/diapositiva" + ultimaDiapositivaID + "-" + posicion + ".mp3");
+                    var arranque = textosCentrados[posicion - 1].TiempoDeArranque;
+                    ReproducirAudio(arranque);
+                    $(audio).bind("ended", ReproducirAudioTextoCentrado);
+
+                }
+                if (plantillaID == 3) {
+                    // -- Si es la primer parte
+                    if (isPrimerTexto) {
+                        // -- Lo pongo en false
+                        isPrimerTexto = false;
+                    }
+                    // -- Asigno id del que estoy por leer
+                    ultimoTextoDiferentePosicion = $('.textosDiferentePosicion[style="display: none"][data-id]').first().attr('data-id');
+                    // -- Lo hago visible
+                    $('.textosDiferentePosicion[style="display: none"][data-id]').first().show().fadeIn(1000);
+                    // -- Reproduzco el audio
+                    audio = new Audio("../../Imagenes/AudiosCursos/diapositiva" + ultimaDiapositivaID + "-" + posicion + ".mp3");
+                    var arranque = textoDiferentesPosiciones[posicion - 1].TiempoDeArranque;
+                    ReproducirAudio(arranque);
+                    $(audio).bind("ended", ReproducirAudioDiferentePosicion);
+                }
+                // -- Si es del tipo textos apilados horizontales
+                if (plantillaID == 4) {
+                    // -- Si es la primer parte
+                    if (isPrimerTexto) {
+                        // -- Lo pongo en false
+                        isPrimerTexto = false;
+                    }
+
+                    // -- Asigno id del que estoy por leer
+                    ultimoTextoApiladoLeido = $('.contenedorTextosHorizontales [style="display:none"]').first().attr('data-id');
+                    // -- Lo hago visible
+                    $('.contenedorTextosHorizontales [style="display:none"]').first().show().fadeIn(1000);
+
+                    // -- Reproduzco el audio
+                    audio = new Audio("../../Imagenes/AudiosCursos/diapositiva" + ultimaDiapositivaID + "-" + posicion + ".mp3");
+                    var arranque = textosApiladosHorizontal[posicion - 1].TiempoDeArranque;
+                    ReproducirAudio(arranque);
+                    $(audio).bind("ended", ReproducirAudioTextoHorizontal);
+                }
+            }
+
+            // -- Pongo como no pausado
+            pausado = false;
+        }
+
+        // Pausa la lectura
+        function PausarLectura() {
+            // -- Pongo como pausado
+            pausado = true;
+            // -- Si esta reproduciendo
+            if (isDiapositivaAudio) {
+                if (reproduciendo) {
+                    audio.pause();
+                }
+            }
+            else {
+                if (responsiveVoice.isPlaying()) {
+                    // -- Pauso
+                    responsiveVoice.pause();
+                }
+            }
+        }
+
+        // Cancela la lectura
+        function StopLectura() {
+            // -- Pongo como no pausado
+            pausado = false;
+            // -- Si esta reproduciendo
+            if (responsiveVoice.isPlaying()) {
+                // -- Cancelo
+                responsiveVoice.cancel();
+            }
+            if (audio != undefined) {
+                audio.pause();
+            }
+            stop = true;
+            //GetDiapositiva(ultimaDiapositivaID);
+        }
+
+        function leerTextoCentrado() {
+            // -- Obtengo el id del ultimo texto leido
+            var ultimoTextoID = $('.contenidoTextosCentrados').attr('data-current-id');
+            // -- Recorro los textos
+            for (var k = 0; k < textosCentrados.length; k++) {
+                // -- Si es el ultimo texto
+                if (textosCentrados[k].EntityID == ultimoTextoID) {
+                    // -- Si no es el ultimo
+                    if (textosCentrados.length - 1 != k) {
+                        // -- Asigno el contenido de el primer texto
+                        $('.contenidoTextosCentrados').hide().html(textosCentrados[k + 1].Contenido).fadeIn(1000);
+                        // -- Asigno el id del texto actual
+                        $('.contenidoTextosCentrados').attr('data-current-id', textosCentrados[k + 1].EntityID);
+                        // -- Reproduzco
+                        PlayLectura();
+                    }
+                }
+            }
+        }
+
+        function ReproducirAudioTextoHorizontal() {
+            // -- Obtengo id del leido
+            ultimoTextoApiladoLeido = $('.contenedorTextosHorizontales [style="display:none"]').first().attr('data-id');
+            // -- Recorro los textos
+            for (var k = 0; k < textosApiladosHorizontal.length; k++) {
+                // -- Si es el ultimo texto leido
+                if (textosApiladosHorizontal[k].EntityID == ultimoTextoApiladoLeido) {
+                    // -- Si no es el ultimo
+                    if (textosApiladosHorizontal.length != k) {
+                        // -- Incremento la posicion
+                        posicion = posicion + 1;
+                        // -- Reproduzco
+                        PlayAudio();
+                    }
+                }
+            }
+        }
+
+        //Reproduce los audios de los textos centrados
+        function ReproducirAudioTextoCentrado() {
+            // -- Obtengo el id del ultimo texto leido
+            var ultimoTextoID = $('.contenidoTextosCentrados').attr('data-current-id');
+            // -- Recorro los textos
+            for (var k = 0; k < textosCentrados.length; k++) {
+                // -- Si es el ultimo texto
+                if (textosCentrados[k].EntityID == ultimoTextoID) {
+                    // -- Si no es el ultimo
+                    if (textosCentrados.length - 1 != k) {
+                        // -- Asigno el contenido de el primer texto
+                        $('.contenidoTextosCentrados').hide().html(textosCentrados[k + 1].Contenido).fadeIn(1000);
+                        // -- Asigno el id del texto actual
+                        $('.contenidoTextosCentrados').attr('data-current-id', textosCentrados[k + 1].EntityID);
+                        // -- Incremento la posicion
+                        posicion = posicion + 1;
+                        // -- Reproduzco
+                        PlayAudio();
+                    }
+                }
+            }
+        }
+
+        function leerTextoHorizontal() {
+            // -- Obtengo id del leido
+            ultimoTextoApiladoLeido = $('.contenedorTextosHorizontales [style="display:none"]').first().attr('data-id');
+            // -- Recorro los textos
+            for (var k = 0; k < textosApiladosHorizontal.length; k++) {
+                // -- Si es el ultimo texto leido
+                if (textosApiladosHorizontal[k].EntityID == ultimoTextoApiladoLeido) {
+                    // -- Si no es el ultimo
+                    if (textosApiladosHorizontal.length != k) {
+                        // -- Reproduzco
+                        PlayLectura();
+                    }
+                }
+            }
+        }
+
+        function leerTextoDiferentePosicion() {
+            // -- Obtengo id del leido
+            var ultimoTextoDiferentePosicion = $('.textosDiferentePosicion[style="display: none"][data-id]').first().attr('data-id');
+            // -- Recorro los textos
+            for (var k = 0; k < textoDiferentesPosiciones.length; k++) {
+                // -- Si es el ultimo texto leido
+                if (textoDiferentesPosiciones[k].EntityID == ultimoTextoDiferentePosicion) {
+                    // -- Si no es el ultimo
+                    if (textoDiferentesPosiciones.length != k) {
+                        // -- Reproduzco
+                        PlayLectura();
+                    }
+                }
+            }
+        }
+
+        //Reproduzco audio en diferente posicion
+        function ReproducirAudioDiferentePosicion() {
+            // -- Obtengo id del leido
+            var ultimoTextoDiferentePosicion = $('.textosDiferentePosicion[style="display: none"][data-id]').first().attr('data-id');
+            // -- Recorro los textos
+            for (var k = 0; k < textoDiferentesPosiciones.length; k++) {
+                // -- Si es el ultimo texto leido
+                if (textoDiferentesPosiciones[k].EntityID == ultimoTextoDiferentePosicion) {
+                    // -- Si no es el ultimo
+                    if (textoDiferentesPosiciones.length != k) {
+                        // -- Reproduzco
+                        posicion = posicion + 1;
+                        PlayAudio();
+                    }
+                }
+            }
+        }
+    </script>
+}

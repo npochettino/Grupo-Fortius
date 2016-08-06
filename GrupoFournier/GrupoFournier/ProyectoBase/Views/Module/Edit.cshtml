@@ -1,0 +1,115 @@
+﻿@model Entities.Module
+@{
+    ViewBag.Title = "Editar Módulo";
+}
+@Styles.Render("~/bundles/Content/TreeView")
+@using MvcCustomHelpers.Razor
+<div class="box box-info box-form">
+    <div class="tituloVista row">
+        <div class="col-md-12">
+            <i class="fa fa-list-ul fa-fw"></i>
+            Editar Módulo
+        </div>
+    </div>
+    <div class="formularioSimple">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "createModule" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Type)
+            @Html.HiddenFor(model => model.EntityID)
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Caption, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.Caption, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Caption, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Action, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.Action, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Action, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Icon, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            @Html.EditorFor(model => model.Icon, new { htmlAttributes = new { @class = "form-control" } })
+                            <span class="input-group-addon"><i id="previsualizarIcono"></i></span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Icon, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.DropDownList("TipoModulo", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessage("TipoModulo", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Enabled, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.CheckBoxFor(model => model.Enabled)
+                        @Html.ValidationMessageFor(model => model.Enabled, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Order, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.Order, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Order, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Parent, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.Hidden("ParentID")
+                        @TreeViewHelper.TreeView()
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        @FormButtonsHelpers.FormButtonBackToList("Module")
+                        @FormButtonsHelpers.FormButtonPostSave()
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/Scripts/TreeView")
+    <script type="text/javascript">
+        cargarNodos(['@Html.Raw(ViewBag.tree)'], "");
+
+        $('form#createModule').submit(function (e) {
+            $('#ParentID').val(RecuperarCheckedRadios());
+        })
+        $(document).ready(function () {
+            $('#Icon').on('change keyup', function () {
+                var valor = $(this).val();
+                $('#previsualizarIcono').removeClass().addClass(valor);
+            });
+            $('#Icon').change();
+        });
+    </script>
+}

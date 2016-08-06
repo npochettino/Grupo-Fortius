@@ -1,0 +1,145 @@
+﻿@model Entities.Usuario
+@using MvcCustomHelpers.Razor
+<style>
+    .columnaTextBusqueda {
+        padding-right: 0;
+    }
+
+    .columnaIconoBusqueda {
+        padding-left: 0;
+    }
+
+    .formularioSimple .box {
+        border-left: 1px solid #d2d6de;
+        border-right: 1px solid #d2d6de;
+    }
+</style>
+@Styles.Render("~/bundles/Content/dataTables")
+<div class="box box-info box-form">
+    <div class="tituloVista row">
+        <div class="col-md-12">
+            <i class="fa fa-users fa-fw"></i>
+            @ViewBag.Title
+        </div>
+    </div>
+    <div class="formularioSimple">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "userCreateForm", autocomplete = "false" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.EntityID)
+
+            <div class="form-horizontal">
+                
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NombreUsuario, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @if (ViewBag.isEditando)
+                        {
+                            @Html.EditorFor(x => x.NombreUsuario, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })
+                        }
+                        else
+                        {
+                            @Html.EditorFor(x => x.NombreUsuario, new { htmlAttributes = new { @class = "form-control" } })
+                        }
+                        @Html.ValidationMessageFor(model => model.NombreUsuario, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                @if (ViewBag.isEditando)
+                {
+                    @Html.HiddenFor(model => model.Password)
+                }
+                else
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(x => x.Password, htmlAttributes: new { @class = "form-control", @readonly = "true" })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NombreCompleto, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.NombreCompleto, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NombreCompleto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Mail, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.Mail, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Mail, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Habilitado, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.CheckBoxFor(model => model.Habilitado, new { @checked = "checked" })
+                        @Html.ValidationMessageFor(model => model.Habilitado, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Rol, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @*@DropDownListHelper.DropDownRol(Html, false)*@
+                        @DropDownListHelper.DropDownRolInferioresEmpresa(Html, false)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Empresa, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @DropDownListHelper.DropDownEmpresa(Html, false)                        
+                    </div>
+                </div>
+                <div class="form-group">
+                    @if (Model.Rol != null && Model.Rol.EntityID == 3) //Si es de tipo empresa
+                    {
+                        <div class="form-group">
+                            @Html.Label("Enviar mails por curso terminado: ", htmlAttributes: new { @class = "control-label col-md-4" })
+                            @Html.CheckBox("isMailCursoTerminado", Model.IsMailCursoTerminado, htmlAttributes: new { @class = "control-label col-md-3" })
+                        </div>
+                    }
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        @FormButtonsHelpers.FormButtonBackToList("Usuario")
+                        @FormButtonsHelpers.FormButtonPostSave()
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/Scripts/dataTables")
+    <script>
+        $(document).ready(function () {
+            // -- Simulo el change de rol para que inicialice 
+            $('#ddlRol').change();
+        });
+
+        // -- Funcion change del combo de rol
+        $('#ddlRol').change(function () {
+            // -- tomo el valor elegido
+            var rolElegido = Number($(this).val());
+            // -- Si eligio el administrador
+            if(rolElegido==2)
+            {
+                // -- Seteo el valor de la empresa fortius
+                $('#ddlEmpresa').select2("val", 1);
+                // -- Bloqueo el select2
+                $('#ddlEmpresa').select2("enable", false);
+            }
+            else
+            {
+                // -- Desbloqueo el select2
+                $('#ddlEmpresa').select2("enable", true);
+            }
+        });
+
+    </script>
+}
+

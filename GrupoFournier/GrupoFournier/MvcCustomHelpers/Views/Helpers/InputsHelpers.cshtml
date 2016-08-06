@@ -1,0 +1,168 @@
+﻿@* Generator: MvcHelper *@
+@* Generator: Template  GeneratePrettyNames : true *@
+@* GeneratePrettyNames : true *@
+
+@using System.Web.Mvc.Html
+@using System;
+
+@*Control para fecha*@
+@helper InputDate(System.Web.Mvc.HtmlHelper html, string ID)
+{
+    <div class="span5 col-md-5 sandbox-container-datepicker form-control" id="">
+        <div class="input-group date">
+            @if (html.ViewData[ID] != null)
+            {
+                <input type="text" id="@ID" name="@ID" value="@Convert.ToDateTime(html.ViewData[ID].ToString()).ToString("dd/MM/yyyy")"><span class="input-group-addon"><i class="fa fa-fw fa-calendar"></i></span>
+            }
+            else
+            {
+                <input type="text" id="@ID" name="@ID"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+            }
+        </div>
+    </div>
+}
+
+@*Control para fecha y hora*@
+@helper InputDateTime(System.Web.Mvc.HtmlHelper html, string ID)
+{
+    <div class="span5 col-md-5 sandbox-container-datetimepicker form-control" id="">
+        <div class="input-group date">
+            @if (html.ViewData[ID] != null)
+            {
+                <input type='text' class="form-control datetimepicker-control" id='@ID' name="@ID" value="@Convert.ToDateTime(html.ViewData[ID].ToString()).ToString("dd/MM/yyyy HH:mm")" /><span class="input-group-addon"><i class="fa fa-fw fa-calendar"></i></span>
+            }
+            else
+            {
+                <input type='text' class="form-control datetimepicker-control" id='@ID' name="@ID" /><span class="input-group-addon"><i class="fa fa-fw fa-calendar"></i></span>
+            }
+
+        </div>
+    </div>
+}
+
+@*Control para rangos*@
+@helper InputDateRange(System.Web.Mvc.HtmlHelper html, string ID, string IDFechaDesde, string IDFechaHasta, int maxDaysRange, bool tieneTiempo)
+{
+    <script>
+        var nuevoControlDateRangepicker = {id : '@ID', maxDaysRange :  @maxDaysRange, tieneTiempo : @tieneTiempo.ToString().ToLower()};
+        controlesDateRangePicker.push(nuevoControlDateRangepicker);
+    </script>
+    <div class="form-group">
+        @*Si tiene valor en el viewData para fecha Desde*@
+        @if (html.ViewData[IDFechaDesde] != null)
+        {
+            //Asigno Valor
+            @html.Hidden(IDFechaDesde, Convert.ToDateTime(html.ViewData[IDFechaDesde].ToString()).ToString("dd/MM/yyyy"), new { @class = "rangeFechaDesde" })
+        }
+        else
+        {
+            @html.Hidden(IDFechaDesde, null, new { @class = "rangeFechaDesde" })
+        }
+        @*Si tiene valor en el viewData para fecha hasta*@
+        @if (html.ViewData[IDFechaHasta] != null)
+        {
+            //Asigno Valor
+            @html.Hidden(IDFechaHasta, Convert.ToDateTime(html.ViewData[IDFechaHasta].ToString()).ToString("dd/MM/yyyy"), new { @class = "rangeFechaHasta" })
+        }
+        else
+        {
+            @html.Hidden(IDFechaHasta, null, new { @class = "rangeFechaHasta" })
+        }
+        <div class="input-group daterangepicker-wrapper">
+            <input type="text" class="form-control pull-right daterangepicker-control" id="@ID" name="@ID">
+            <div class="input-group-addon">
+                <i class="fa fa-calendar fa-fw"></i>
+            </div>
+        </div><!-- /.input group -->
+    </div><!-- /.form group -->
+}
+
+@*Control para input mask del tipo numerico*@
+@helper InputMaskNumeric(System.Web.Mvc.HtmlHelper html, string ID, int enteros, int decimales)
+{
+    <script>
+        var nuevoControlInputMaskNumerico = {id : '@ID', enteros :  @enteros, decimales : @decimales};
+        inputsMaskNumericos.push(nuevoControlInputMaskNumerico);
+    </script>
+if (html.ViewData[ID] != null)
+{
+        <input id="@ID" name="@ID" class="input-mask-numeric-control form-control" />
+}
+else
+{
+        <input id="@ID" name="@ID" class="input-mask-numeric-control form-control" value="@html.ViewData[ID]" />
+}
+
+}
+
+@*Control para input mask del tipo numerico*@
+@helper InputMaskNumeric(System.Web.Mvc.HtmlHelper html, string ID, int enteros, int decimales, string extraClasses, string valor, string opcionesAdicionales)
+{
+    <script>
+        var nuevoControlInputMaskNumerico = {id : '@ID', enteros :  @enteros, decimales : @decimales};
+        inputsMaskNumericos.push(nuevoControlInputMaskNumerico);
+    </script>
+extraClasses += " input-mask-numeric-control form-control";
+if (string.Empty.Equals(valor))
+{
+        <input id="@ID" name="@ID" class="@extraClasses" @opcionesAdicionales />
+}
+else
+{
+        <input id="@ID" name="@ID" class="@extraClasses" value="@valor" />
+}
+
+}
+
+@*Control para input mask del tipo numerico*@
+@helper InputMaskNumericMoney(System.Web.Mvc.HtmlHelper html, string ID, int enteros, int decimales)
+{
+    <script>
+        var nuevoControlInputMaskNumerico = {id : '@ID', enteros :  @enteros, decimales : @decimales};
+        inputsMaskNumericos.push(nuevoControlInputMaskNumerico);
+    </script>
+    <div class="input-group">
+        @if (html.ViewData[ID] != null)
+        {
+            <input id="@ID" name="@ID" class="input-mask-numeric-control form-control" />
+        }
+        else
+        {
+            <input id="@ID" name="@ID" class="input-mask-numeric-control form-control" value="@html.ViewData[ID]" />
+        }
+
+        <div class="input-group-addon"><i class="fa fa-fw fa-dollar"></i></div>
+    </div>
+}
+
+@*Control para input mask del tipo numerico*@
+@helper InputPassword(System.Web.Mvc.HtmlHelper html, string ID)
+{
+    <div class="input-group">
+        if (html.ViewData[ID] != null)
+        {
+        <input id="@ID" name="@ID" type="password" class="form-control" />
+        }
+        else
+        {
+        <input id="@ID" name="@ID" value="@html.ViewData[ID]" class="form-control" />
+        }
+        <div class="input-group-addon"><i class="fa fa-fw fa-lock"></i></div>
+    </div>
+}
+
+@*Control para input mask del tipo numerico*@
+@helper InputText(System.Web.Mvc.HtmlHelper html, string ID, string iconClass)
+{
+    <div class="input-group">
+        @if (html.ViewData[ID] != null)
+        {
+            <input id="@ID" name="@ID" class="form-control" />
+        }
+        else
+        {
+            <input id="@ID" name="@ID" value="@html.ViewData[ID]" class="form-control" />
+        }
+        <div class="input-group-addon"><i class="@iconClass"></i></div>
+    </div>
+}

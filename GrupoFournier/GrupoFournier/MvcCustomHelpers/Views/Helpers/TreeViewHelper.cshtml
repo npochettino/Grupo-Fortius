@@ -1,0 +1,15 @@
+﻿@* Generator: MvcHelper *@
+@* Generator: Template  GeneratePrettyNames : true *@
+@* GeneratePrettyNames : true *@
+
+@*TreeView*@
+@helper TreeView()
+{
+    <div class="input-group search-error">
+        Buscar: <input type="text" class="search form-control error" id="inputError" title="Buscar" data-toggle="tooltip" data-placement="bottom" />
+    </div>
+    <div class="aciTree aciTreeBig aciTreeArrow aciTreeNoBranches" id="tree">
+
+    </div>
+    <button class="btn btn-danger btn-xs" onclick="CleanTreeSelection(); return false;">Limpiar</button>
+}

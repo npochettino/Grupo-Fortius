@@ -1,0 +1,308 @@
+﻿/*Mostrar alertas*/
+.alerta {
+    background-color: rgb(221, 75, 57);
+    color: white;
+    font-size: 16px;
+    border-radius: 3px;
+    padding: 10px;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-align: center;
+}
+/*#region Layout*/
+.content-wrapper {
+    padding: 20px;
+    overflow-x: auto;
+}
+
+/*#endregion Layout*/
+/*#region MenuUsuario*/
+
+.iconoUsuarioGrande {
+    color: white;
+    font-size: 60px;
+}
+
+/*#endregion MenuUsuario*/
+/*#region Login*/
+.login-background {
+    background-color: #f78f1e;
+    background-size: 100%;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+}
+
+.login-box-body {
+    border-radius: 10px;
+}
+
+.login-logo {
+    /*background: url(../images/login.png);
+    background-color: #444;*/
+    background-size: 100%;
+    height: 90px;
+    /*width: 360px;*/
+    font-size: 35px;
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 300;
+    margin: 7% auto;
+}
+
+.icon-padding {
+    right: 15px;
+    position: absolute;
+    top: 37px;
+    z-index: 2;
+    display: block;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    padding-right: 22px;
+    pointer-events: none;
+}
+
+/*Olvide mi contraseña*/
+
+.forgot-pass-box {
+    height: 350px;
+    width: 600px;
+    background: #fff;
+    padding: 20px;
+    color: #666;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    margin: 7% auto;
+}
+
+.align-button {
+    top: 35px;
+    padding-left: 30px;
+}
+
+.center {
+    text-align: center;
+}
+
+
+/*#endregion Login*/
+/*#region Formularios ABM*/
+.tituloVista {
+    font-size: 24px;
+    color: black;
+    margin-bottom: 20px;
+}
+
+/*Fomularios de alta y modificacion*/
+.formularioSimple {
+    width: 500px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.box-form {
+    padding: 5px;
+}
+
+/*#endregion Formularios ABM*/
+/*#region Grillas*/
+
+/*Fondo para el encabezado de la grilla*/
+.grid-mvc thead {
+    background-color: #1E5A8E;
+}
+
+/*Color de la fuente para los títulos en los encabezados*/
+.grid-header-title a {
+    color: white;
+}
+/*Color de los iconos de ordenado de dataTables*/
+.grid-header {
+    color: white;
+}
+
+.grid-mvc {
+    width: 100% !important;
+    overflow-x: scroll;
+}
+.grid-mvc .row{
+    margin-right:0;
+    margin-left:0;
+}
+/*Oculta botón para ordenar en las columnas de botones*/
+table.dataTable.table-condensed thead .sorting:after, table.dataTable.table-condensed thead .sorting_asc:after, table.dataTable.table-condensed thead .sorting_desc:after {
+    display: none;
+}
+
+/*Paginado*/
+.dataTables_paginate.paging_simple_numbers {
+    font-size: 12px;
+}
+
+/*Alineado de opcion de pagina*/
+.dataTables_length label {
+    float: left;
+}
+/*#endregion Grillas*/
+
+/*#region TreeView*/
+
+.aciTreeText {
+    font-weight: normal;
+    font-size: 14px !important;
+    font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif !important;
+}
+
+.aciTree .aciTreeButton, .aciTree .aciTreePush, .aciTree .aciTreeItem, .aciTree .aciTreeIcon, .aciTree .aciTreeText, .aciTree .aciTreeColumn {
+    line-height: 18px !important;
+}
+
+.aciTree label {
+    margin-bottom: 0px;
+}
+
+.treeActionIcon {
+    color: red;
+    margin-left: 5px;
+    font-size: 11px;
+}
+/*#endregion*/
+
+/*#region Filtros de grillas*/
+
+/*General del contenedor de filtros*/
+.box-filter {
+    width: 100%;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+    /*Titulo*/
+    .box-filter .box-title {
+        font-size: 14px;
+    }
+
+    /*Combos de seleccion*/
+    .box-filter select {
+        width: auto;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    /*Inputs */
+    .box-filter input {
+        width: auto;
+        height: 26px;
+        font-size: 12px;
+    }
+
+    /*Labels*/
+    .box-filter span {
+        padding-top: 5px;
+        font-size: 13px;
+    }
+
+    /*Cuerpo */
+    .box-filter .box-body {
+    }
+
+/*Contenedor*/
+.filtersContainer {
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.box-filter .col-md-6 {
+    margin-top: 5px;
+}
+/*#endregion Filtros de grillas*/
+
+/*#region Buscardor*/
+
+/*Ancho del popup*/
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: 750px;
+    }
+}
+
+/*Filas comprimidas*/
+table.tablaBusqueda tbody td {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+/*#endregion Buscador*/
+
+
+/*#region Mensaje de validate*/
+.error {
+    text-decoration-color: red;
+    color: red;
+}
+/*#region Mensaje de validate*/
+
+/*#region Select2*/
+
+.select2
+    {
+        width:100% !important;
+    }
+
+/*Labels*/
+.box-filter .select2 {
+    padding-top: 0px;
+    font-size: 13px;
+}
+
+
+.formularioSimple .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 27px;
+}
+
+/*#region Select2 en filtros*/
+.filtersContainer .select2
+    {
+        width:100% !important;
+    }
+    .filtersContainer .select2-selection__rendered {
+        font-size: 12px !important;
+        line-height: 18px !important;
+        padding-top: 2px !important;
+    }
+
+    .filtersContainer .select2-container--default .select2-selection--single {
+        height: 26px !important;
+    }
+
+    .filtersContainer .select2-selection__arrow
+    {
+        height: 21px !important;
+    }
+
+/*#endregion Select2 en filtros*/
+
+/*#endregion Select2*/
+
+/*Oculta una barra blanca que aparece al pie de la pagina al hacer foco sobre ciertos elementos*/
+.ui-tooltip.ui-widget.ui-corner-all.ui-widget-content
+{
+    display:none !important;
+}
+
+/*Oculto ordenamiento en columna de botones*/
+table.dataTable thead .gridButtonColumn.sorting:after
+{
+    content: "" !important;
+}
+table.dataTable thead .gridButtonColumn.sorting_asc:after
+{
+    content: "" !important;
+}
+table.dataTable thead .gridButtonColumn.sorting_desc:after
+{
+    content: "" !important;
+}

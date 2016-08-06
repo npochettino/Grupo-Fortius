@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Entities.Module>
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Módulos";
+}
+@using MvcCustomHelpers.Razor
+@Styles.Render("~/bundles/Content/GridMVC")
+@Styles.Render("~/bundles/Content/dataTables")
+<div class="box box-body">
+    <div class="tituloVista row">
+        <div class="col-md-12"><i class="fa fa-list-ul fa-fw"></i>Módulos</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                @FormButtonsHelpers.FormButtonAdd("Create", "Module")
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Grid(Model).Columns(columns =>
+       {
+           columns.Add(c => c.Name).Titled("Nombre");
+           columns.Add(c => c.Description).Titled("Descripcion");
+           columns.Add(c => c.Action).Titled("Acción");
+           columns.Add(c => c.Type).Titled("Tipo");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => GridHelpers.GridButtonEdit("Edit", "Module", r.EntityID)).SetWidth(30).Css("gridButtonColumn");
+       }).Sortable(false).WithMultipleFilters()
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/Scripts/GridMVC")
+    @Scripts.Render("~/bundles/Scripts/dataTables")
+}

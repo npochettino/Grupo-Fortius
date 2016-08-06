@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Entities.Curso>
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Mis Cursos";
+}
+@using MvcCustomHelpers.Razor
+
+@helper CargarArchivosColumn(Entities.Curso curso)
+{
+    <a href="/Curso/RecargarCurso/@curso.EntityID" class="btn btn-xs btn-success"><i class="fa fa-fw fa-upload"></i>Subir Archivos</a>
+}
+
+@helper VerCurso(Entities.Curso curso)
+{
+    Logic.DiapositivaLogic diapoLogic = new Logic.DiapositivaLogic();
+    // -- Recupero diapositivas
+    var diapositivas = diapoLogic.GetByCurso(curso.EntityID);
+    if (diapositivas.Count > 0)
+    {
+        <a href="/Diapositiva/VerCurso/@curso.EntityID" class="btn btn-xs btn-success"><i class="fa fa-fw fa-eye"></i>Ver Curso</a>
+    }
+    else
+    {
+        <a href="/Curso/VerCurso/@curso.EntityID" class="btn btn-xs btn-success"><i class="fa fa-fw fa-eye"></i>Ver Curso</a>
+    }
+}
+
+@Styles.Render("~/bundles/Content/GridMVC")
+@Styles.Render("~/bundles/Content/dataTables")
+<div class="box box-body">
+    <div class="tituloVista row">
+        <div class="col-md-12"><i class="fa fa-file-video-o fa-fw"></i>@ViewBag.Title</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Grid(Model).Columns(columns =>
+       {
+           columns.Add(c => c.Nombre).Titled("Nombre");
+           columns.Add(c => c.Descripcion).Titled("Descripcion");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => VerCurso(r)).SetWidth(30).Css("gridButtonColumn");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => GridHelpers.GridButton("HacerExamen", "Curso", "Examen", "fa fa-fw fa-file-text-o", "btn btn-xs btn-info", r.EntityID)).SetWidth(30).Css("gridButtonColumn");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => GridHelpers.GridButton("MiCertificado", "Curso", "Certificado", "fa fa-fw fa-file-text-o", "btn btn-xs btn-info", r.EntityID)).SetWidth(30).Css("gridButtonColumn");
+       }).Sortable(false).WithMultipleFilters()
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/Scripts/GridMVC")
+    @Scripts.Render("~/bundles/Scripts/dataTables")
+    <script>
+    </script>
+}
+
+
+
+

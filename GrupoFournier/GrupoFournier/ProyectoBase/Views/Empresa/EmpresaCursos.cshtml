@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Entities.EmpresaCurso>
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Cursos de la Empresa";
+}
+@using MvcCustomHelpers.Razor
+@Styles.Render("~/bundles/Content/GridMVC")
+@Styles.Render("~/bundles/Content/dataTables")
+@helper CheckBoxColumn(bool checkeado)
+{
+    if (checkeado)
+    {
+        <input type="checkbox" checked disabled />
+    }
+    else
+    {
+        <input type="checkbox" disabled />
+    }
+}
+<div class="box box-body">
+    <div class="tituloVista row">
+        <div class="col-md-12"><i class="fa fa-suitcase fa-fw"></i>@ViewBag.Title</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Grid(Model).Columns(columns =>
+       {
+           columns.Add(c => c.Curso.Nombre).Titled("Nombre");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => CheckBoxColumn(r.TieneLimite)).Titled("Limite").SetWidth(30).Css("gridButtonColumn");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => GridHelpers.GridButtonEdit("EmpresaCursoSave", "Empresa", r.EntityID)).SetWidth(30).Css("gridButtonColumn");
+       }).Sortable(false).WithMultipleFilters()
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/Scripts/GridMVC")
+    @Scripts.Render("~/bundles/Scripts/dataTables")
+    <script>
+    </script>
+}

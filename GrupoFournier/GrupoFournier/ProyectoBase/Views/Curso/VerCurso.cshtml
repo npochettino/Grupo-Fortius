@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Curso";
+}
+
+
+@if ((bool)ViewBag.TieneAcceso)
+{
+    if ((bool)ViewBag.ExisteCurso)
+    {
+        <div>El curso se abrira en una nueva ventana</div>
+        <script>
+            window.open('@ViewBag.Url', '_blank');
+        </script>
+    }
+    else
+    {
+        <div class="alerta">
+            El curso no esta disponible, contacte al administrador.
+        </div>
+    }
+}
+else
+{
+    <div class="alerta">
+        No esta autorizado para realizar la acción solicitada.
+    </div>
+}

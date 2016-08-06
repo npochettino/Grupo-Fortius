@@ -1,0 +1,548 @@
+﻿@model Entities.DiapositivaVM
+@using MvcCustomHelpers.Razor
+@using GridMvc.Html
+<style>
+    .columnaTextBusqueda {
+        padding-right: 0;
+    }
+
+    .columnaIconoBusqueda {
+        padding-left: 0;
+    }
+
+    .formularioSimple .box {
+        border-left: 1px solid #d2d6de;
+        border-right: 1px solid #d2d6de;
+    }
+
+    .formularioSimple {
+        max-width: 1000px;
+    }
+
+    #ContenidoTexto {
+        height: 500px;
+    }
+
+    .derecha {
+        float: right;
+        width: 25%;
+    }
+</style>
+@Styles.Render("~/bundles/Content/dataTables")
+<div class="box box-info box-form">
+    <div class="tituloVista row">
+        <div class="col-md-12">
+            <i class="fa fa-fw fa-file-image-o"></i>
+            @ViewBag.Title
+        </div>
+    </div>
+    <div class="formularioSimple">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "cursoCreateForm", autocomplete = "false", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Diapositiva.EntityID)
+            @Html.HiddenFor(model => model.Diapositiva.Activo)
+            @Html.Hidden("cursoID", Model.Diapositiva.Curso.EntityID)
+            @Html.HiddenFor(model => model.Diapositiva.Imagen)
+            <div class="form-horizontal">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tabDiapositiva" data-toggle="tab" aria-expanded="true">Diapositiva</a></li>
+                        <li class=""><a href="#tabVista" data-toggle="tab" aria-expanded="false">Vista</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabDiapositiva" style="max-width:600px">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Diapositiva.Titulo, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(x => x.Diapositiva.Titulo, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Diapositiva.Titulo, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Diapositiva.ColorTitulo, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <div class="input-group color-picker">
+                                        @Html.EditorFor(model => model.Diapositiva.ColorTitulo, new { htmlAttributes = new { @class = "form-control" } })
+                                        <span class="input-group-addon"><i></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Diapositiva.Orden, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Diapositiva.Orden, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Diapositiva.Orden, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Diapositivas", htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.DropDownList("DiapositivasID", (MultiSelectList)ViewBag.DiapositivasID, new { @class = "control-label col-md-12 select2", multiple = "multiple" })
+                                    @Html.ValidationMessage("DiapositivasID", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Cargar Imagen", htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input type="file" name="ImagenDiapositiva" id="ImagenDiapositiva" class="form-control" accept=".jpg,.jpeg,.gif,.png" />
+                                    @Html.ValidationMessage("ImagenDiapositiva", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            @if (Model.Diapositiva.EntityID != 0 && !string.IsNullOrWhiteSpace(Model.Diapositiva.Imagen))
+                            {
+                                <div class="form-group contenedorImagenActual">
+                                    @Html.Label("Imagen Actual", htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        <img src="~/Imagenes/ImagenesCursos/@Model.Diapositiva.Imagen" height="140" width="140" class="img-rounded" />
+                                        <a onclick="MostrarModalBorrarImagenVideo('imagen')"><span class="btn btn-danger"><i class="fa fa-fw fa-minus-circle"></i> Borrar</span></a>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                @Html.Label("Plantilla", htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @DropDownListHelper.DropDownPlantilla(Html, false)
+                                    @Html.ValidationMessage("DiapositivasID", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Es de audio", htmlAttributes: new { @class = "control-label col-md-3" })
+                                @Html.CheckBox("isDiapositivaAudio", Model.Diapositiva.IsDiapositivaAudio, htmlAttributes: new { @class = "control-label col-md-3" })
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabVista">
+                            <div id="contenedorBotones">
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.Label("Título", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.Label("Contenido", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.Label("Color", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.TituloBoton1, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextAreaFor(model => model.ContenidoBoton1, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group color-picker">
+                                            @Html.EditorFor(model => model.ColorBoton1, new { htmlAttributes = new { @class = "form-control" } })
+                                            <span class="input-group-addon"><i></i></span>
+                                        </div>
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "1" }, { "idAudio", "AudioBoton1" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.Label("Título", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.Label("Contenido", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.Label("Color", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.TituloBoton2, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextAreaFor(model => model.ContenidoBoton2, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group color-picker">
+                                            @Html.EditorFor(model => model.ColorBoton2, new { htmlAttributes = new { @class = "form-control" } })
+                                            <span class="input-group-addon"><i></i></span>
+                                        </div>
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "2" }, { "idAudio", "AudioBoton2" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.Label("Título", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.Label("Contenido", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.Label("Color", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.TituloBoton3, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextAreaFor(model => model.ContenidoBoton3, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group color-picker">
+                                            @Html.EditorFor(model => model.ColorBoton3, new { htmlAttributes = new { @class = "form-control" } })
+                                            <span class="input-group-addon"><i></i></span>
+                                        </div>
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "3" }, { "idAudio", "AudioBoton3" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.Label("Título", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.Label("Contenido", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.Label("Color", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.TituloBoton4, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextAreaFor(model => model.ContenidoBoton4, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group color-picker">
+                                            @Html.EditorFor(model => model.ColorBoton4, new { htmlAttributes = new { @class = "form-control" } })
+                                            <span class="input-group-addon"><i></i></span>
+                                        </div>
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "4" }, { "idAudio", "AudioBoton4" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.Label("Título", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.Label("Contenido", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.Label("Color", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.TituloBoton5, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextAreaFor(model => model.ContenidoBoton5, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "5" }, { "idAudio", "AudioBoton5" } })
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="contenedorTextoAlineados">
+                                <div class="form-group">
+                                    <div class="col-md-9">
+                                        @Html.Label("Texto 1", htmlAttributes: new { @class = "control-label ol-md-3" })
+                                        @Html.TextAreaFor(model => model.TextoAlineado1, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "1" }, { "idAudio", "AudioTextoAlineado1" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-9">
+                                        @Html.Label("Texto 2", htmlAttributes: new { @class = "control-label ol-md-3" })
+                                        @Html.TextAreaFor(model => model.TextoAlineado2, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "2" }, { "idAudio", "AudioTextoAlineado2" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-9">
+                                        @Html.Label("Texto 3", htmlAttributes: new { @class = "control-label ol-md-3" })
+                                        @Html.TextAreaFor(model => model.TextoAlineado3, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "3" }, { "idAudio", "AudioTextoAlineado3" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-9">
+                                        @Html.Label("Texto 4", htmlAttributes: new { @class = "control-label ol-md-3" })
+                                        @Html.TextAreaFor(model => model.TextoAlineado4, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "4" }, { "idAudio", "AudioTextoAlineado4" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-9">
+                                        @Html.Label("Texto 5", htmlAttributes: new { @class = "control-label ol-md-3" })
+                                        @Html.TextAreaFor(model => model.TextoAlineado5, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.Label("CargarAudio", htmlAttributes: new { @class = "control-label" })
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "5" }, { "idAudio", "AudioTextoAlineado5" } })
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="contenedorTextoZonas">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "1" }, { "idAudio", "AudioTextoDistribuido1" } })
+                                        @Html.Label("Texto 1", htmlAttributes: new { @class = "control-label ol-md-3" })
+                                        @Html.TextAreaFor(model => model.TextoDistribuido1, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-4 col-md-push-4">
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "2" }, { "idAudio", "AudioTextoDistribuido2" } })
+                                        @Html.Label("Texto 2", htmlAttributes: new { @class = "control-label ol-md-3" })
+                                        @Html.TextAreaFor(model => model.TextoDistribuido2, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4 col-md-push-4">
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "3" }, { "idAudio", "AudioTextoDistribuido3" } })
+                                        @Html.Label("Texto 3", htmlAttributes: new { @class = "control-label ol-md-3" })
+                                        @Html.TextAreaFor(model => model.TextoDistribuido3, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "4" }, { "idAudio", "AudioTextoDistribuido4" } })
+                                        @Html.Label("Texto 4", htmlAttributes: new { @class = "control-label ol-md-3" })
+                                        @Html.TextAreaFor(model => model.TextoDistribuido4, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-4 col-md-push-4">
+                                        @Html.Partial("_Audio", Model, new ViewDataDictionary { { "posicion", "5" }, { "idAudio", "AudioTextoDistribuido5" } })
+                                        @Html.Label("Texto 5", htmlAttributes: new { @class = "control-label ol-md-3" })
+                                        @Html.TextAreaFor(model => model.TextoDistribuido5, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="contenedorVideo">
+                                <div class="form-group">
+                                    @Html.Label("Cargar Video", htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        <input type="file" name="VideoDiapositiva" id="VideoDiapositiva" class="form-control" accept=".mp4, .avi, .mpeg, .mpg, .wmv" />
+                                        @Html.ValidationMessage("VideoDiapositiva", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                @if (Model.Diapositiva.EntityID != 0 && !string.IsNullOrWhiteSpace(Model.Diapositiva.Video))
+                                {
+                                    <div class="form-group contenedorVideoActual">
+                                        @Html.Label("Video Actual", htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-9">
+                                            <video controls autoplay style="vertical-align:middle;width:360px;height:240px;">
+                                                <source src="~/Imagenes/VideosCursos/@Model.Diapositiva.Video" @*type="video/mp4"*@>
+                                            </video>
+                                            <a onclick="MostrarModalBorrarImagenVideo('video')" style="vertical-align:middle"><span class="btn btn-danger"><i class="fa fa-fw fa-minus-circle"></i> Borrar</span></a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <a href="/Diapositiva/Index?cursoID=@Model.Diapositiva.Curso.EntityID"><span class="btn btn-danger"><i class="fa fa-arrow-circle-left fa-fw"></i>Volver a la lista</span></a>
+                        @FormButtonsHelpers.FormButtonPostSave()
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@*Modal de validación para "Borrar ImagenVideo"*@
+<div id="modalBorrarImagenVideo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modal-borrar-imagenVideo-title"></h4>
+            </div>
+            <div class="modal-body">
+                <p id="modal-borrar-imagenVideo-body"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="buttonBorrarImagen" class="btn btn-danger">Borrar</button>
+                <button type="button" id="buttonBorrarVideo" class="btn btn-danger">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/Scripts/dataTables")
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+    <script>
+        var diaposSelectedItems;
+        $(document).ready(function () {
+            //Setea los items que deberian estar seleccionados pero no fueron seleccionados por problemas del mvc
+            diaposSelectedItems= @Html.Raw(Json.Encode(@ViewBag.DiapositivasID.SelectedValues));
+            $('#DiapositivasID option').each(function() {
+                if($.inArray(Number($(this).val()), diaposSelectedItems) > -1)
+                {
+                    if($(this).attr( "selected" ) == undefined)
+                    {
+                        $(this).attr( "selected" , "selected");
+                    }
+                }
+            })
+            $('#DiapositivasID').select2();
+            // -- Inicializo colores
+            var element = $('.color-picker').colorpicker();
+
+            tinymce.init({
+                selector: 'textarea',
+                height: 500,
+                resize: false,
+                theme: 'modern',
+                menubar: false,
+                statusbar: false,
+                //inline: true,
+                plugins: [
+                  'advlist autolink lists charmap print preview hr anchor pagebreak',
+                  'searchreplace wordcount visualblocks visualchars code fullscreen',
+                  'insertdatetime media nonbreaking save table contextmenu directionality',
+                  'emoticons template paste textcolor colorpicker textpattern imagetools'
+                ],
+                toolbar1: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | forecolor backcolor',
+                //image_advtab: true,
+                //content_css: [
+                //  '//fast.fonts.net/cssapi/e6dc9b99-64fe-4292-ad98-6974f93cd2a2.css',
+                //  '//www.tinymce.com/css/codepen.min.css'
+                //]
+            });
+            // -- Simulo change para inicializar vista visible
+            $('#ddlPlantilla').change();
+        });
+
+        $('form').submit(function (){
+            tinyMCE.triggerSave();
+        });
+
+        $('#ddlPlantilla').change(function(){
+            var valor = $(this).val();
+            if(valor == 1)
+            {
+                $('#contenedorBotones').show();
+                $('#contenedorTextoAlineados').hide();
+                $('#contenedorTextoZonas').hide();
+                $('#contenedorVideo').hide();
+            }
+            if(valor == 3)
+            {
+                $('#contenedorBotones').hide();
+                $('#contenedorTextoAlineados').hide();
+                $('#contenedorTextoZonas').show();
+                $('#contenedorVideo').hide();
+            }
+            if(valor == 2 || valor == 4)
+            {
+                $('#contenedorBotones').hide();
+                $('#contenedorTextoAlineados').show();
+                $('#contenedorTextoZonas').hide();
+                $('#contenedorVideo').hide();
+            }
+            if(valor == 5)
+            {
+                $('#contenedorBotones').hide();
+                $('#contenedorTextoAlineados').hide();
+                $('#contenedorTextoZonas').hide();
+                $('#contenedorVideo').show();
+            }
+        });
+
+        // Muestra el modal para borrar imagenVideo
+        function MostrarModalBorrarImagenVideo(imagenVideo) {
+            // -- Seteo Titulo y Mensaje del modal según si es imagen o video
+            if(imagenVideo == "imagen")
+            {
+                $('#buttonBorrarVideo').hide();
+                $('#buttonBorrarImagen').show();
+                var titulo  = "Brorrar Imagen";
+                var mensaje = "¿Está seguro que desea borrar la imagen actual?";
+            }
+            if(imagenVideo == "video")
+            {
+                $('#buttonBorrarVideo').show();
+                $('#buttonBorrarImagen').hide();
+                var titulo  = "Brorrar Video";
+                var mensaje = "¿Está seguro que desea borrar el video actual?";
+            }
+            // -- Asigno valores y muestro el modal
+            $('#modal-borrar-imagenVideo-title').text(titulo);
+            $('#modal-borrar-imagenVideo-body').text(mensaje);
+            $('#modalBorrarImagenVideo').modal('show');
+        }
+
+        // -- Boton del modal borrar imagen
+        $('#buttonBorrarImagen').click(function () {
+            $(".contenedorImagenActual").hide();
+            $("#Imagen").removeAttr("value");
+            $('#modalBorrarImagenVideo').modal('hide');
+        })
+
+        // -- Boton del modal borrar video
+        $('#buttonBorrarVideo').click(function () {
+            $(".contenedorVideoActual").hide();
+            $("#Video").removeAttr("value");
+            $('#modalBorrarImagenVideo').modal('hide');
+        })
+
+        //Region de los audios
+        var blob = window.URL || window.webkitURL;
+        var audio;
+
+        function Play(idDiapositiva, posicion, audioID)
+        {
+            if(audio == undefined || audio.paused)
+            {
+                var file = document.getElementById(audioID).files[0];
+
+                if (file)
+                {
+                    var fileURL = blob.createObjectURL(file);
+                    audio = new Audio();
+
+                    audio.src = fileURL;
+                    audio.play();
+                }
+                else
+                {
+                    audio = new Audio("../../Imagenes/AudiosCursos/diapositiva" + idDiapositiva + "-" + posicion + ".mp3");
+                    audio.play();
+                }
+            }
+        }
+
+        function StopLectura()
+        {
+            if(audio)
+            {
+                audio.pause();
+            }
+        }
+
+    </script>
+}
+
+
+

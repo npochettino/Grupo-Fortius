@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9EADA387-6703-4DC4-AC0C-C4DFF2DED78F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DALC</RootNamespace>
+    <AssemblyName>DALC</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\packages\FluentNHibernate.2.0.3.0\lib\net40\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DalcBase\DalcBase.cs" />
+    <Compile Include="DalcBase\IDalc.cs" />
+    <Compile Include="EntitiesMaps\GrupoFournier\BotonMap.cs" />
+    <Compile Include="EntitiesMaps\GrupoFournier\CursoMap.cs" />
+    <Compile Include="EntitiesMaps\GrupoFournier\CursoUsuarioMap.cs" />
+    <Compile Include="EntitiesMaps\GrupoFournier\DiapositivaMap.cs" />
+    <Compile Include="EntitiesMaps\GrupoFournier\DiapositivaVistaMap.cs" />
+    <Compile Include="EntitiesMaps\GrupoFournier\EmpresaCursoMap.cs" />
+    <Compile Include="EntitiesMaps\GrupoFournier\EmpresaMap.cs" />
+    <Compile Include="EntitiesMaps\GrupoFournier\EstadoCursoMap.cs" />
+    <Compile Include="EntitiesMaps\GrupoFournier\OpcionMap.cs" />
+    <Compile Include="EntitiesMaps\GrupoFournier\PlantillaMap.cs" />
+    <Compile Include="EntitiesMaps\GrupoFournier\PreguntaMap.cs" />
+    <Compile Include="EntitiesMaps\GrupoFournier\TextoMap.cs" />
+    <Compile Include="EntitiesMaps\Sys\ModuleMap.cs" />
+    <Compile Include="EntitiesMaps\Sys\RolMap.cs" />
+    <Compile Include="EntitiesMaps\Sys\UsuarioMap.cs" />
+    <Compile Include="GrupoFournier\BotonDalc.cs" />
+    <Compile Include="GrupoFournier\CursoUsuarioDalc.cs" />
+    <Compile Include="GrupoFournier\DiapositivaDalc.cs" />
+    <Compile Include="GrupoFournier\DiapositivaVistaDalc.cs" />
+    <Compile Include="GrupoFournier\EmpresaCursoDalc.cs" />
+    <Compile Include="GrupoFournier\EmpresaDalc.cs" />
+    <Compile Include="GrupoFournier\OpcionDalc.cs" />
+    <Compile Include="GrupoFournier\PlantillaDalc.cs" />
+    <Compile Include="GrupoFournier\PreguntaDalc.cs" />
+    <Compile Include="GrupoFournier\TextoDalc.cs" />
+    <Compile Include="NHibernate\NHibernateAccesor.cs" />
+    <Compile Include="NHibernate\NHibernateManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GrupoFournier\CursoDalc.cs" />
+    <Compile Include="Sys\ModuleDalc.cs" />
+    <Compile Include="Sys\RolDalc.cs" />
+    <Compile Include="Sys\UsuarioDalc.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cross\Cross.csproj">
+      <Project>{C0F210DA-B4FB-4518-89AA-9955D8130A2F}</Project>
+      <Name>Cross</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Entities\Entities.csproj">
+      <Project>{aee1d97f-42e4-4aef-9c0a-432dfa2e9cdb}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fwk\Fwk.csproj">
+      <Project>{3b9acef1-680e-4523-9e0f-02d8bbf2005f}</Project>
+      <Name>Fwk</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DB-BackUps\GrupoFournier 19-5-2016.sql" />
+    <Content Include="DB-BackUps\GrupoFournier.sql" />
+    <Content Include="DB-BackUps\GrupoFortius20160131.sql" />
+    <Content Include="DB-BackUps\GrupoFortius20160410.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

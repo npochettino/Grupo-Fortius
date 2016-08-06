@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Entities.Rol>
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Roles";
+}
+@using MvcCustomHelpers.Razor
+@Styles.Render("~/bundles/Content/GridMVC")
+@Styles.Render("~/bundles/Content/dataTables")
+<div class="box box-body">
+    <div class="tituloVista row">
+        <div class="col-md-12"><i class="fa fa-user-secret fa-fw"></i>@ViewBag.Title</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                @FormButtonsHelpers.FormButtonAdd("Save", "Rol")
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Grid(Model).Columns(columns =>
+       {
+           columns.Add(c => c.Nombre).Titled("Nombre");
+           columns.Add(c => c.Nivel).Titled("Nivel");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => GridHelpers.GridButtonEdit("Save", "Rol", r.EntityID)).SetWidth(30).Css("gridButtonColumn");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => GridHelpers.GridButton("RolModules", "Rol", "Módulos", "fa fa-list-ul fa-fw", "btn btn-xs btn-warning", r.EntityID)).SetWidth(30).Css("gridButtonColumn");
+       }).Sortable(false).WithMultipleFilters()
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/Scripts/GridMVC")
+    @Scripts.Render("~/bundles/Scripts/dataTables")
+    <script>
+    </script>
+}

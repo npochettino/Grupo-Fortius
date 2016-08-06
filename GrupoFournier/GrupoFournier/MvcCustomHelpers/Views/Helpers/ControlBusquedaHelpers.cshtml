@@ -1,0 +1,148 @@
+﻿@* Generator: MvcHelper *@
+@* Generator: Template  GeneratePrettyNames : true *@
+@* GeneratePrettyNames : true *@
+
+@using MvcCustomHelpers.Classes
+
+@helper ControlBusqueda(string id, List<ControlBusquedaColumna> campos, string action, string nameProp, string hiddenText, string descriptionText)
+{
+    @*
+        Parametros:
+        id: id para el control de busqueda
+        campos: List de los campos que se deben mostrar en la grilla. Tiene una lista interna que tiene 2 valores, nombre del campo y titulo a mostrar
+        action: acción de la que obtiene informacion, se llama desde el ajax
+        nameProp: nombre de la propiedad que se va a usar como descriptiva para guardarse en el text box bloquedo
+        hiddenText: id del input donde se guardara el entityId de la fila seleccionada
+        descriptionText: id del input bloqueda donde se guardará el valor descriptivo(nameProp)
+    *@
+    <a class="btn btn-danger btn-md" onclick="mostrarModalBusqueda('modal-@id', 'search-table-@id', '@action', '@nameProp', 'input-search-@id', '@id', '@hiddenText', '@descriptionText')"><i class="fa fa-search"></i></a>
+    <div id="modal-@id" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Búsqueda</h4>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control textBuscar" id="input-search-@id" placeholder="Escriba para buscar ..." type="text">
+                    <div style="margin-top:50px">
+                        <table id="search-table-@id" class="tablaBusqueda table table-bordered table-striped">
+                            <thead>
+                            <th>EntityID</th>
+                            @foreach (ControlBusquedaColumna campo in campos)
+                            {
+                                <th>@campo.Propiedad</th>
+                            }
+                            <th></th>
+                            </thead>
+                            @*<tbody></tbody>*@
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        //agrego las columnas para el buscador actual
+        var columnasActuales = [];
+        columnasActuales.push({ 'data': 'EntityID', 'visible': false });
+        @foreach (ControlBusquedaColumna campo in campos)
+            {
+                <text>columnasActuales.push({ 'data': '@campo.Propiedad', 'title': '@campo.Titulo' });</text>
+            }
+        //guardo las columnas y su id en el array que se define al principio de la pagina
+        var obj = [];
+        obj.push('@id');
+        obj.push(columnasActuales);
+        columns.push(obj);
+        //guardo el reload del buscador actual con su id
+        var reload = [];
+        reload.push('@id');
+        reload.push(false);
+        reloades.push(reload);
+    </script>
+}
+
+@*Control de busqueda con mas parametros para buscar*@
+namespace PresentationAdm
+@helper ControlBusqueda(string id, List<ControlBusquedaColumna> campos, string action, string nameProp, string hiddenText, string descriptionText, List<ControlBusquedaParametros> parametrosFiltro)
+{
+    @*
+        Parametros:
+        id: id para el control de busqueda
+        campos: List de los campos que se deben mostrar en la grilla. Tiene una lista interna que tiene 2 valores, nombre del campo y titulo a mostrar
+        action: acción de la que obtiene informacion, se llama desde el ajax
+        nameProp: nombre de la propiedad que se va a usar como descriptiva para guardarse en el text box bloquedo
+        hiddenText: id del input donde se guardara el entityId de la fila seleccionada
+        descriptionText: id del input bloqueda donde se guardará el valor descriptivo(nameProp)
+        parametrosFiltro: lista de parametros adicionales al text para buscar, tiene una lista interna que contiene tipo de control del cual obtener el valor y el id del control
+    *@
+    <a class="btn btn-danger btn-md" onclick="mostrarModalBusqueda('modal-@id', 'search-table-@id', '@action', '@nameProp', 'input-search-@id', '@id', '@hiddenText', '@descriptionText')"><i class="fa fa-search"></i></a>
+    <div id="modal-@id" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Búsqueda</h4>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control textBuscar" id="input-search-@id" placeholder="Escriba para buscar ..." type="text">
+                    <div style="margin-top:50px">
+                        <table id="search-table-@id" class="tablaBusqueda table table-bordered table-striped">
+                            <thead>
+                            <th>EntityID</th>
+                            @*Agrego un encabezado por cada campo enviado*@
+                            @foreach (ControlBusquedaColumna campo in campos)
+                            {
+                                <th>@campo.Propiedad</th>
+                            }
+                            <th></th>
+                            </thead>
+                            @*<tbody></tbody>*@
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        //agrego las columnas para el buscador actual
+        var columnasActuales = [];
+        columnasActuales.push({ 'data': 'EntityID', 'visible': false });
+        @foreach (ControlBusquedaColumna campo in campos)
+            {
+                <text>columnasActuales.push({ 'data': '@campo.Propiedad', 'title': '@campo.Titulo' });</text>
+            }
+        //guardo las columnas y su id en el array que se define al principio de la pagina
+        var obj = [];
+        obj.push('@id');
+        obj.push(columnasActuales);
+        columns.push(obj);
+        //guardo el reload del buscador actual con su id
+        var reload = [];
+        reload.push('@id');
+        reload.push(false);
+        reloades.push(reload);
+
+        var params = []
+        //Cada parametro es nombre/id input
+        @foreach (ControlBusquedaParametros param in parametrosFiltro)
+        {
+            //Agrego cada parametro a un array
+            <text>params.push(['@param.Tipo', '@param.ID'])</text>
+        }
+        parametrosFiltro.push(['@id', params]);
+    </script>
+}

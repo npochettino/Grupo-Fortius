@@ -1,0 +1,3 @@
+﻿GeneratePrettyNames: true
+GenerateAbsolutePathLinePragmas: true
+RazorVersion: 3

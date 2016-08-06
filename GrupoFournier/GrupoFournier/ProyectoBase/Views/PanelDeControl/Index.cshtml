@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Panel de Control";
+}
+@using MvcCustomHelpers.Razor
+<div class="box box-info box-form">
+    <div class="tituloVista row">
+        <div class="col-md-12">
+            <i class="fa fa-user-secret fa-fw"></i>
+            @ViewBag.Title
+        </div>
+    </div>
+    <div class="formularioSimple">
+        @FormButtonsHelpers.ButtonGeneric("ReiniciarVariablesAplicacion", "PanelDeControl", "Reiniciar Variables", "", "btn btn-info")
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

@@ -1,0 +1,117 @@
+﻿@model IEnumerable<Entities.Curso>
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Cursos";
+}
+@using MvcCustomHelpers.Razor
+
+@helper CargarArchivosColumn(Entities.Curso curso)
+{
+    <a href="/Curso/RecargarCurso/@curso.EntityID" class="btn btn-xs btn-success"><i class="fa fa-fw fa-upload"></i>Subir Archivos</a>
+}
+@helper BorrarCurso(Entities.Curso curso)
+{
+    <button onclick="MostrarModalBorrarCurso(@curso.EntityID, '@curso.Descripcion')" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-minus-circle"></i>Borrar</button>
+}
+@helper VerDiapositivas(long cursoID)
+{
+    <a href="/Diapositiva/Index?cursoID=@cursoID"><span class="btn btn-xs btn-success"><i class="fa fa-file-image-o fa-fw"></i>Diapositivas</span></a>
+}
+@helper VerCurso(Entities.Curso curso)
+{
+    Logic.DiapositivaLogic diapoLogic = new Logic.DiapositivaLogic();
+    // -- Recupero diapositivas
+    var diapositivas = diapoLogic.GetByCurso(curso.EntityID);
+    if (diapositivas.Count > 0)
+    {
+        <a href="/Diapositiva/VerCurso/@curso.EntityID" class="btn btn-xs btn-warning"><i class="fa fa-fw fa-eye"></i>Ver Curso</a>
+    }
+    else
+    {
+        <a href="/Curso/VerCursoAdmin/@curso.EntityID" class="btn btn-xs btn-warning"><i class="fa fa-fw fa-eye"></i>Ver Curso</a>
+    }
+}
+@Styles.Render("~/bundles/Content/GridMVC")
+@Styles.Render("~/bundles/Content/dataTables")
+<div class="box box-body">
+    <div class="tituloVista row">
+        <div class="col-md-12"><i class="fa fa-suitcase fa-fw"></i>@ViewBag.Title</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                @FormButtonsHelpers.FormButtonAdd("Save", "Curso")
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Grid(Model).Columns(columns =>
+       {
+           columns.Add(c => c.Nombre).Titled("Nombre");
+           columns.Add(c => c.Descripcion).Titled("Descripcion");
+           columns.Add(c => c.RolMinimo.Nombre).Titled("Rol Minimo");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => GridHelpers.GridButtonEdit("Save", "Curso", r.EntityID)).SetWidth(30).Css("gridButtonColumn");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => CargarArchivosColumn(r)).SetWidth(30).Css("gridButtonColumn");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => GridHelpers.GridButton("Index", "Pregunta", "Preguntas", "fa fa-fw fa-question-circle", "btn btn-xs btn-danger", r.EntityID)).SetWidth(30).Css("gridButtonColumn");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => VerCurso(r)).SetWidth(30).Css("gridButtonColumn");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => VerDiapositivas(r.EntityID)).SetWidth(30).Css("gridButtonColumn");
+           columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => BorrarCurso(r)).SetWidth(30).Css("gridButtonColumn");
+       }).Sortable(false).WithMultipleFilters()
+        </div>
+    </div>
+</div>
+
+<div id="modalBorrarCurso" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Borrar Curso</h4>
+            </div>
+            <div class="modal-body" id="modal-body-borrar-curso">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="buttonBorrarCurso" class="btn btn-danger">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/Scripts/GridMVC")
+    @Scripts.Render("~/bundles/Scripts/dataTables")
+    <script>
+        var idCursoBorrar;
+
+        $('#buttonBorrarCurso').click(function () {
+            BloquearContenido();
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: '@Url.Action("BorrarCurso", "Curso")',
+                data: { "cursoID": idCursoBorrar },
+                success: function (data) {
+                    DesbloquearContenido();
+                    window.location.href = '/Curso/Index';
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    DesbloquearContenido();
+                    AlertError("Ha ocurrido un error y no se guardo el examen realizado", "Advertencia");
+                }
+            });
+        });
+
+        // Muestra el modal para borrar curso
+        function MostrarModalBorrarCurso(cursoID, descripcion) {
+            idCursoBorrar = cursoID;
+            $('#modal-body-borrar-curso').html('<p>Desea borrar el curso: "' + descripcion + '" ?</p>');
+            $('#modalBorrarCurso').modal('show');
+        }
+    </script>
+}
+
+
+
+

@@ -1,0 +1,76 @@
+﻿@* Generator: MvcHelper *@
+@* Generator: Template  GeneratePrettyNames : true *@
+@* GeneratePrettyNames : true *@
+
+@*Botones para grillas*@
+@*Boton genérico*@
+@helper GridButton(string action, string controller, string text, string iconClass, string buttonClass, long id)
+{
+    <a href="/@controller/@action/@id"><span class="@buttonClass"><i class="@iconClass"></i>@text</span></a>
+}
+@*Boton editar*@
+@helper GridButtonEdit(string action, string controller, long id)
+{
+    <a href="/@controller/@action/@id"><span class="btn btn-xs btn-info"><i class="fa fa-pencil-square-o fa-fw"></i>Editar</span></a>
+}
+@*Boton borrar*@
+@helper GridButtonDelete(string action, string controller, long id)
+{
+    <a href="/@controller/@action/@id"><span class="btn btn-xs btn-danger"><i class="fa fa-trash fa-fw"></i>Borrar</span></a>
+}
+@*Columna de grilla con texto e ícono*@
+@helper GridColumnIconText(string text, string iconClass)
+{
+    @text<i style="margin-left:5px" class="@iconClass"></i>
+}
+@*Columna de grilla con ícono*@
+@helper GridColumnIcon(string iconClass)
+{
+    <i style="margin-left:5px" class="@iconClass"></i>
+}
+@helper GridButtonModalDisable(long id, string name)
+{
+    <a href="#"><span class="btn btn-xs btn-danger" onclick="AbreModal(@id, '@name')"><i class="fa fa-ban fa-fw"></i>Deshabilitar</span></a>
+}
+@*Renderiza el contenido de la celda de la grilla con estilo*@
+@helper GridColumnWithBackGround(string contenido, string color)
+{
+    <span style="background-color:@color">@contenido</span>
+}
+@*Modal deshabilitar en grilla*@
+@helper ModalDeshabilitar(string titulo)
+{
+    <div id="modalDeshabilitar" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@titulo</h4>
+                </div>
+                <div class="modal-body" id="modal-body-deshabilitar">
+                    <p></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>
+                    <button type="button" id="buttonDeshabilitar" class="btn btn-danger">Deshabilitar</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+}
+@*Display de Si o No para booleans*@
+@helper DisplaySioNo(bool value)
+{
+    if (value)
+    {
+        <span>Si</span>
+    }
+    else
+    {
+        <span>No</span>
+    }
+}
+@helper FechaSinHora(DateTime fechaYHora)
+{
+    fechaYHora.ToString("dd/MM/yyyy");
+}

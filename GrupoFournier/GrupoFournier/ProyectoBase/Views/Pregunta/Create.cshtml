@@ -1,0 +1,198 @@
+﻿@model Entities.Pregunta
+@using MvcCustomHelpers.Razor
+@{
+    ViewBag.Title = "Crear Pregunta";
+}
+<style>
+    #buttonAgregarOpcion, .buttonQuitarOpcion, buttonGuardarPregunta {
+        cursor: pointer;
+    }
+
+    #buttonAgregarOpcion {
+        margin-left: 20px;
+    }
+
+    .buttonQuitarOpcion {
+        margin-left: 10px;
+    }
+
+    .formularioSimple .box {
+        border-left: 1px solid #d2d6de;
+        border-right: 1px solid #d2d6de;
+    }
+
+    .radiosOpcionesContainer {
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 20px;
+    }
+
+        .radiosOpcionesContainer .row {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+</style>
+<div class="box box-info box-form">
+    <div class="tituloVista row">
+        <div class="col-md-12">
+            <i class="fa fa-question-circle fa-fw"></i>
+            Crear Pregunta
+        </div>
+    </div>
+    <div class="formularioSimple">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.EntityID);
+            @Html.HiddenFor(x => x.Activo);
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Titulo, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Titulo, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Titulo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Orden, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Orden, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Orden, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="box box-danger box-form">
+                    <div class="row">
+                        <div class="col-md-12" style="font-size: 16px; font-weight: bold">
+                            Opciones
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 15px">
+                        <label class="control-label col-md-4">Texto opcion</label>
+                        <div class="col-md-8">
+                            @Html.TextBox("IngresoOpcion", null, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:0; margin-right: 0">
+                        <a id="buttonAgregarOpcion" onclick="AgregarOpcion()"><span class="btn btn-success"><i class="fa fa-plus-circle fa-fw"></i>Agregar</span></a>
+                    </div>
+                    <div class="row" style="margin-right: 0; margin-left:20px; font-weight:bold; color:red; margin-top: 10px">
+                        Debe seleccionar la opcion que sera la respuesta correcta
+                    </div>
+                    <div class="row radiosOpcionesContainer">
+                        @*<div class="row">
+                                <div class="col-md-2">
+                                    <input type="radio" name="radioOpciones" />
+                                </div>
+                                <div class="col-md-10">
+                                    El texto <a class="buttonQuitarOpcion" onclick="ButtonQuitarOpcionClick(this)"><span class="btn btn-danger  btn-xs"><i class="fa fa-times fa-fw"></i>Quitar</span></a>
+                                </div>
+                            </div>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <a href="/Pregunta/Index/@Model.Curso.EntityID"><span class="btn btn-danger"><i class="fa fa-arrow-circle-left fa-fw"></i>Volver a la lista</span></a>
+                        <a class="btn btn-success buttonGuardarPregunta">
+                            <i class="fa fa-floppy-o fa-fw"></i>Guardar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+    // Agrega una opcion al conjunto de radio buttons
+    function AgregarOpcion() {
+        // -- Si ingreso opcion
+        if ($("#IngresoOpcion").val() != "") {
+            // -- Armo la opcion
+            var html = ArmarOpcion($("#IngresoOpcion").val());
+            // -- Agrego opcion al container
+            $('.radiosOpcionesContainer').append(html);
+            // -- Limpio el input
+            $("#IngresoOpcion").val('');
+        }
+        else {
+            // -- Muestro alerta si no ingreso nada
+            AlertNotice("Debe ingresar un texto para la opcion", "Alerta");
+        }
+    }
+    // Funcion para quitar una opcion de los radios
+    function ButtonQuitarOpcionClick(opcion) {
+        // -- Obtengo toda la opcion desde el boton
+        $(opcion).parent().parent().remove();
+    }
+
+    // Arma el html de la nueva opcion
+    function ArmarOpcion(textoOpcion) {
+        var html = "";
+        html += '<div class="row">';
+        html += '<div class="col-md-2"><input data-opcion-id="0" type="radio" name="radioOpciones" /></div>';
+        html += '<div class="col-md-10">';
+        html += '<span class="textoOpcion">'+textoOpcion+'</span>';
+        html += '<a class="buttonQuitarOpcion" onclick="ButtonQuitarOpcionClick(this)"><span class="btn btn-danger  btn-xs"><i class="fa fa-times fa-fw"></i>Quitar</span></a>';
+        html += '</div>';
+        html += '</div>';
+        return html;
+    }
+
+    // Click boton guardar
+    $('.buttonGuardarPregunta').click(function () {
+        // -- Si se selecciono alguna opcion
+        if ($('input[name=radioOpciones]:checked').val() == 'on') {
+            // -- Si se ingreso titulo y orden valido
+            if ($('#Titulo').valid() && $('#Orden').valid()) {
+                // -- Creo objeto y asigno propiedades
+                var pregunta = new Object();
+                pregunta.Titulo = $('#Titulo').val();
+                pregunta.Orden = $('#Orden').val();
+                pregunta.Opciones = [];
+                pregunta.Activo = true;
+                pregunta.EntityID = @Model.EntityID;
+
+                // -- Creo curso
+                pregunta.Curso= new Object();
+                pregunta.Curso.EntityID= @Model.Curso.EntityID;
+
+                for (var i = 0; i < $('input[name=radioOpciones]').length; i++) {
+                    // -- Accedo al input
+                    var currentInput = $($('input[name=radioOpciones]')[i]);
+                    // -- Creo objecto y asigno propiedades
+                    var opcion = new Object();
+                    opcion.Activo= true;
+                    opcion.EntityID= Number(currentInput.attr('data-opcion-id'));
+                    opcion.Correcta= currentInput.is(':checked');
+                    opcion.Descripcion = currentInput.parent().parent().find('.textoOpcion').html();
+
+                    // -- Agrego opcion a pregunta
+                    pregunta.Opciones.push(opcion);
+                }
+
+                // -- Llamo al ajax
+                BloquearContenido();
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: '@Url.Action("Create", "Pregunta")',
+                        data: { "pregunta": pregunta },
+                        success: function (data) {
+                            DesbloquearContenido();
+                            window.location.href = '/Pregunta/Index/@Model.Curso.EntityID';
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            DesbloquearContenido();
+                            AlertError("Ha ocurrido un error y no se guardo la pregunta", "Advertencia");
+                        }
+                    });
+                }
+            }
+            else {
+                AlertError('Debe elegir una opcion para que sea la correcta', 'Alerta')
+            }
+        })
+    </script>
+}
